@@ -1,1 +1,30 @@
-<p>product-list-view.component works!</p>
+<div class="page-header">
+  <h1 class="page-title">Products List</h1>
+</div>
+
+<div class="table-container">
+  <table class="product-table">
+    <thead>
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for(product of products; track product.id){
+        <tr>
+          <td><img [src]="product.imageUrl" alt="{{product.name}}" width="50" height="50"></td>
+          <td>{{product.name}}</td>
+          <td>{{product.price}}</td>
+          <td>
+            <button class="btn btn-primary" (click)="onProductClick(product.id)">
+              View Details
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

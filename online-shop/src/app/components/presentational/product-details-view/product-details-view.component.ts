@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {Product} from '../../../types/products.types';
 
 @Component({
   imports: [],
@@ -6,4 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './product-details-view.component.scss',
   templateUrl: './product-details-view.component.html',
 })
-export class ProductDetailsViewComponent {}
+export class ProductDetailsViewComponent {
+  @Input({required: true}) productData!: Product;
+
+}

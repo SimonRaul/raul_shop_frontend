@@ -1,9 +1,33 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {mockProducts} from '../../../mocks/products.mocks';
+import {Product} from '../../../types/products.types';
+import {ProductListViewComponent} from '../../presentational/product-list-view/product-list-view.component';
+import {Router} from '@angular/router';
 
 @Component({
-  imports: [],
+  imports: [ProductListViewComponent],
   selector: 'app-product-list',
   styleUrl: './product-list.component.scss',
-  templateUrl: './product-list.component.html',
+  template: `
+    <app-product-list-view
+    [products]="products"
+    (productClicked)="goToDetails($event)">
+  </app-product-list-view>`,
 })
-export class ProductListComponent {}
+export class ProductListComponent implements OnInit{
+  products: Product[] = []
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    this.products = mockProducts;
+  }
+
+  goToDetails(productId: string): void {
+    this.router.navigate(['/product', productId]);
+  }
+}

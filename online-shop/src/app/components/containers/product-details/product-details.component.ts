@@ -1,9 +1,35 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Product} from '../../../types/products.types';
+import {mockProducts} from '../../../mocks/products.mocks';
+import {ProductDetailsViewComponent} from '../../presentational/product-details-view/product-details-view.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  imports: [],
+  imports: [ProductDetailsViewComponent],
   selector: 'app-product-details',
   styleUrl: './product-details.component.scss',
-  templateUrl: './product-details.component.html',
+  template: `
+    @if (product) {
+      <app-product-details-view [productData]="product"></app-product-details-view>
+    } @else {
+      <p>Loading Product Details...</p>
+    }`,
 })
-export class ProductDetailsComponent {}
+export class ProductDetailsComponent implements OnInit {
+  product: Product | undefined
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+
+      if (idParam) {
+        this.loadProductDetails(idParam);
+      }
+    });
+  }
+
+  loadProductDetails(productId: string): void {
+    this.product = mockProducts.find(p => p.id === productId);
+  }
+}

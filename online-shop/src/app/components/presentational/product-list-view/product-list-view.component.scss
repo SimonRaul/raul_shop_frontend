@@ -1,0 +1,111 @@
+:host {
+  --primary-color: #146E5B;
+  --primary-hover: #21B593;
+  --bg-surface: #92D6C7;
+  --bg-body: #32C9BC;
+  --border-color: #17806E;
+  --text-main: #111827;
+
+  display: block;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--text-main);
+  margin: 0;
+  letter-spacing: -0.025em;
+  text-align: center;
+}
+
+.table-container {
+  background-color: var(--bg-surface);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  thead {
+    background-color: var(--bg-body);
+    border-bottom: 1px solid var(--border-color);
+
+    th {
+      padding: 1rem 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: var(--bg-body);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-main);
+      vertical-align: middle;
+
+      &:nth-child(3) {
+        font-weight: 500;
+      }
+
+      img {
+        border-radius: 6px;
+        object-fit: cover;
+        display: block;
+      }
+    }
+  }
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+
+  &-primary {
+    background-color: var(--primary-color);
+    color: #000000;
+
+    &:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(20, 110, 91, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+  }
+}

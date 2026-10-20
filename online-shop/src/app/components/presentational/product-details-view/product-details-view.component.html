@@ -1,1 +1,19 @@
-<p>product-details-view works!</p>
+@if(productData; as product){
+  <div>
+    <div>
+      <h1>{{product.name}}</h1>
+      <p>{{product.description}}</p>
+    </div>
+    <div>
+      <img [src]="product.imageUrl" alt="{{product.name}}" />
+    </div>
+    <div>
+      <h2>Price: {{product.price}}</h2>
+      <p>Weight: {{product.weight}}</p>
+    </div>
+    <div>
+      <h3>Category: {{product.category}}</h3>
+      <p>{{product.categoryDescription}}</p>
+    </div>
+  </div>
+}
