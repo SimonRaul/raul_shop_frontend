@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Product} from '../../../types/products.types';
+import {Product} from '../../../features/shared/types/products.types';
 import {mockProducts} from '../../../mocks/products.mocks';
 import {ProductDetailsViewComponent} from '../../presentational/product-details-view/product-details-view.component';
 import { ActivatedRoute } from '@angular/router';

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {mockProducts} from '../../../mocks/products.mocks';
-import {Product} from '../../../types/products.types';
+import {Product} from '../../../features/shared/types/products.types';
 import {ProductListViewComponent} from '../../presentational/product-list-view/product-list-view.component';
 import {Router} from '@angular/router';
 
