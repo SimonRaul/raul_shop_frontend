@@ -15,5 +15,11 @@ export const routes: Routes = [
   {
     path: 'products',
     component: ProductListComponent
+  },
+  {
+    path: 'shopping-cart',
+    loadChildren: () =>
+      import('./features/shared/shopping-cart/shopping-cart-module')
+        .then(m => m.ShoppingCartModule)
   }
 ];

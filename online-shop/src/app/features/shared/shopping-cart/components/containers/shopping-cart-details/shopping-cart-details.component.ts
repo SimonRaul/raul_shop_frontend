@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CartState} from '../../../../types/cart-state.types';
 import Decimal from 'decimal.js';
+import {mockCartState} from '../../../../../../mocks/cart-state.mocks';
 
 @Component({
   standalone: false,
@@ -23,20 +24,37 @@ export class ShoppingCartDetailsComponent implements OnInit {
     totalPrice: new Decimal(0),
   };
 
-  constructor(private shoppingCartService: any) {
-  }
+  // constructor(private shoppingCartService: any) {
+  // }
 
   ngOnInit(): void {
-    this.cartState = this.shoppingCartService.getCartState();
+    // this.cartState = this.shoppingCartService.getCartState();
+    this.cartState = mockCartState;
   }
 
   onQuantityChange(event: { productId: string; newQuantity: number }): void {
-    this.shoppingCartService.updateItemQuantity(event.productId, event.newQuantity);
-    this.cartState = this.shoppingCartService.getCartState();
+    // this.shoppingCartService.updateItemQuantity(event.productId, event.newQuantity);
+    // this.cartState = this.shoppingCartService.getCartState();
+    const item = this.cartState.items.find(i => i.product.id === event.productId);
+    if (item) {
+      item.quantity = event.newQuantity;
+      this.recalculateMockState()
+    }
   }
 
   onItemRemoved(productId: string): void {
-    this.shoppingCartService.removeItem(productId);
-    this.cartState = this.shoppingCartService.getCartState();
+    // this.shoppingCartService.removeItem(productId);
+    // this.cartState = this.shoppingCartService.getCartState();
+    this.cartState.items = this.cartState.items.filter(item => item.product.id !== productId);
+    this.recalculateMockState()
+  }
+
+  private recalculateMockState(): void {
+    this.cartState.totalItems = this.cartState.items.reduce((sum, item) => sum + item.quantity, 0);
+
+    this.cartState.totalPrice = this.cartState.items.reduce(
+      (sum, item) => sum.plus(new Decimal(item.product.price).times(item.quantity)),
+      new Decimal(0)
+    );
   }
 }
