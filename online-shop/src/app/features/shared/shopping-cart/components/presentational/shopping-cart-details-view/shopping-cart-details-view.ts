@@ -13,15 +13,11 @@ export class ShoppingCartDetailsView {
   @Input({required: true}) totalItems!: number;
   @Input({required: true}) items!: CartItem[];
 
-  @Output() quantityChanged = new EventEmitter<{ productId: string; newQuantity: number }>();
+  @Output() quantityChanged = new EventEmitter<{ productId: string; rawValue: string }>();
   @Output() itemRemoved = new EventEmitter<string>();
 
   onQuantityChange(productId: string, rawValue: string): void {
-    const newQuantity: number = Number(rawValue);
-
-    if (newQuantity > 0) {
-      this.quantityChanged.emit({ productId, newQuantity });
-    }
+      this.quantityChanged.emit({ productId, rawValue });
   }
 
   onRemove(productId: string): void {
@@ -29,7 +25,6 @@ export class ShoppingCartDetailsView {
   }
 
   onCheckout(): void {
-    // Implement checkout logic here
   }
 }
 

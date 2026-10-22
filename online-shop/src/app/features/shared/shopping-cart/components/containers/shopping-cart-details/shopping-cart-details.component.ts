@@ -32,13 +32,20 @@ export class ShoppingCartDetailsComponent implements OnInit {
     this.cartState = mockCartState;
   }
 
-  onQuantityChange(event: { productId: string; newQuantity: number }): void {
+  onQuantityChange(event: { productId: string; rawValue: string }): void {
     // this.shoppingCartService.updateItemQuantity(event.productId, event.newQuantity);
     // this.cartState = this.shoppingCartService.getCartState();
     const item = this.cartState.items.find(i => i.product.id === event.productId);
     if (item) {
-      item.quantity = event.newQuantity;
-      this.recalculateMockState()
+      const newQuantity = Number(event.rawValue);
+
+      if (newQuantity > 0) {
+        item.quantity = newQuantity;
+        this.recalculateMockState()
+      }
+      else{
+        this.onItemRemoved(event.productId);
+      }
     }
   }
 
