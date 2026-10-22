@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 @Component({
   imports: [ProductListViewComponent],
   selector: 'app-product-list',
-  styleUrl: './product-list.component.scss',
   template: ` <app-product-list-view [products]="products" (productClicked)="goToDetails($event)">
   </app-product-list-view>`,
 })

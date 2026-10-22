@@ -5,5 +5,5 @@ import { CartState } from '../features/shared/types/cart-state.types';
 export const mockCartState: CartState = {
   items: mockCartItems,
   totalItems: 3,
-  totalPrice: new Decimal('8098.99'),
+  totalPrice: 8098.99,
 };

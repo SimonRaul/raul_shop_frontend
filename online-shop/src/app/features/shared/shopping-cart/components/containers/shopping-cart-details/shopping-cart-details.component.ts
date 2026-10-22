@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CartState } from '../../../../types/cart-state.types';
-import Decimal from 'decimal.js';
 import { mockCartState } from '../../../../../../mocks/cart-state.mocks';
 
 @Component({
   standalone: false,
   selector: 'app-shopping-cart-details',
-  styleUrl: './shopping-cart-details.component.scss',
   template: `
     <app-shopping-cart-details-view
       [totalPrice]="cartState.totalPrice"
@@ -21,7 +19,7 @@ export class ShoppingCartDetailsComponent implements OnInit {
   cartState: CartState = {
     items: [],
     totalItems: 0,
-    totalPrice: new Decimal(0),
+    totalPrice: 0,
   };
 
   // constructor(private shoppingCartService: any) {
@@ -58,9 +56,11 @@ export class ShoppingCartDetailsComponent implements OnInit {
   private recalculateMockState(): void {
     this.cartState.totalItems = this.cartState.items.reduce((sum, item) => sum + item.quantity, 0);
 
-    this.cartState.totalPrice = this.cartState.items.reduce(
-      (sum, item) => sum.plus(new Decimal(item.product.price).times(item.quantity)),
-      new Decimal(0),
+    const rawTotal = this.cartState.items.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0,
     );
+
+    this.cartState.totalPrice = Number(rawTotal.toFixed(2));
   }
 }

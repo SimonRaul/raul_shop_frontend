@@ -7,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   imports: [ProductDetailsViewComponent],
   selector: 'app-product-details',
-  styleUrl: './product-details.component.scss',
   template: ` @if (product) {
       <app-product-details-view [productData]="product"></app-product-details-view>
     } @else {

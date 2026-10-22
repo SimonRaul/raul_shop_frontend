@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartItem } from '../../../../types/cart-item.types';
-import Decimal from 'decimal.js';
 
 @Component({
   standalone: false,
@@ -9,7 +8,7 @@ import Decimal from 'decimal.js';
   templateUrl: './shopping-cart-details-view.html',
 })
 export class ShoppingCartDetailsView {
-  @Input({ required: true }) totalPrice!: Decimal;
+  @Input({ required: true }) totalPrice!: number;
   @Input({ required: true }) totalItems!: number;
   @Input({ required: true }) items!: CartItem[];
 
