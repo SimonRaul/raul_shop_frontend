@@ -10,8 +10,4 @@ import { Product } from '../../../features/shared/types/products.types';
 export class ProductListViewComponent {
   @Input({ required: true }) products!: Product[];
   @Output() productClicked = new EventEmitter<string>();
-
-  onProductClick(productId: string): void {
-    this.productClicked.emit(productId);
-  }
 }
