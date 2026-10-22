@@ -1,0 +1,53 @@
+<div class="shopping-cart">
+  @if (items.length > 0) {
+    <div class="page-title">
+      <h1>Your Cart</h1>
+    </div>
+    <div class="cart-container">
+      <div class="cart-items">
+        @for (item of items; track item.product.id) {
+          <div class="cart-item">
+            <div class="item-image">
+              <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+            </div>
+            <div class="item-details">
+              <h3>{{ item.product.name }}</h3>
+              <p class="price">Price: {{ item.product.price }} RON</p>
+              <div class="item-actions">
+                <div class="quantity-control">
+                  <label for="qty-{{ item.product.id }}">Quantity:</label>
+                  <input
+                    id="qty-{{ item.product.id }}"
+                    #qtyInput
+                    type="number"
+                    [value]="item.quantity"
+                    min="1"
+                    class="qty-input"
+                    (change)="onQuantityChange(item.product.id, qtyInput.value)"
+                  />
+                </div>
+                <button class="btn-delete" (click)="onRemove(item.product.id)">Delete</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row">
+          <span>Total Items:</span>
+          <span>{{ totalItems }}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total Price:</span>
+          <span>{{ totalPrice }} RON</span>
+        </div>
+        <button class="btn-checkout" (click)="onCheckout()">Proceed to Checkout</button>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-cart-message">
+      <p>Your shopping cart is empty.</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,13 @@
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Product } from '../../../features/shared/types/products.types';
+
+@Component({
+  imports: [],
+  selector: 'app-product-list-view',
+  styleUrl: './product-list-view.component.scss',
+  templateUrl: './product-list-view.component.html',
+})
+export class ProductListViewComponent {
+  @Input({ required: true }) products!: Product[];
+  @Output() productClicked = new EventEmitter<string>();
+}

@@ -1,0 +1,27 @@
+@if (productData; as product) {
+  <div class="product-details-container">
+    <div class="product-image">
+      <img [src]="product.imageUrl" [alt]="product.name" />
+    </div>
+
+    <div class="product-info">
+      <div class="item-title-price">
+        <h1>{{ product.name }}</h1>
+        <h2>Price: {{ product.price }} RON</h2>
+      </div>
+
+      <div class="item-category">
+        <h3>Category: {{ product.category }}</h3>
+        <p>{{ product.categoryDescription }}</p>
+      </div>
+
+      <div class="item-description">
+        <p>{{ product.description }}</p>
+      </div>
+
+      <div class="item-weight">
+        <p>Weight: {{ product.weight }} kg</p>
+      </div>
+    </div>
+  </div>
+}
