@@ -1,26 +1,25 @@
-import {Component, OnInit} from '@angular/core';
-import {Product} from '../../../features/shared/types/products.types';
-import {mockProducts} from '../../../mocks/products.mocks';
-import {ProductDetailsViewComponent} from '../../presentational/product-details-view/product-details-view.component';
+import { Component, OnInit } from '@angular/core';
+import { Product } from '../../../features/shared/types/products.types';
+import { mockProducts } from '../../../mocks/products.mocks';
+import { ProductDetailsViewComponent } from '../../presentational/product-details-view/product-details-view.component';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   imports: [ProductDetailsViewComponent],
   selector: 'app-product-details',
   styleUrl: './product-details.component.scss',
-  template: `
-    @if (product) {
+  template: ` @if (product) {
       <app-product-details-view [productData]="product"></app-product-details-view>
     } @else {
       <p>Loading Product Details...</p>
     }`,
 })
 export class ProductDetailsComponent implements OnInit {
-  product: Product | undefined
+  product: Product | undefined;
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const idParam = params.get('id');
 
       if (idParam) {
@@ -30,6 +29,6 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   loadProductDetails(productId: string): void {
-    this.product = mockProducts.find(p => p.id === productId);
+    this.product = mockProducts.find((p) => p.id === productId);
   }
 }

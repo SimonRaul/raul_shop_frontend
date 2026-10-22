@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output, signal} from '@angular/core';
-import {Product} from '../../../features/shared/types/products.types';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Product } from '../../../features/shared/types/products.types';
 
 @Component({
   imports: [],
@@ -8,7 +8,7 @@ import {Product} from '../../../features/shared/types/products.types';
   templateUrl: './product-list-view.component.html',
 })
 export class ProductListViewComponent {
-  @Input({required: true}) products!: Product[];
+  @Input({ required: true }) products!: Product[];
   @Output() productClicked = new EventEmitter<string>();
 
   onProductClick(productId: string): void {

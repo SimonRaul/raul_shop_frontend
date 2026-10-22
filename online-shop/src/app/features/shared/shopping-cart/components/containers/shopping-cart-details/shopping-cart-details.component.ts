@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {CartState} from '../../../../types/cart-state.types';
+import { Component, OnInit } from '@angular/core';
+import { CartState } from '../../../../types/cart-state.types';
 import Decimal from 'decimal.js';
-import {mockCartState} from '../../../../../../mocks/cart-state.mocks';
+import { mockCartState } from '../../../../../../mocks/cart-state.mocks';
 
 @Component({
   standalone: false,
@@ -35,15 +35,14 @@ export class ShoppingCartDetailsComponent implements OnInit {
   onQuantityChange(event: { productId: string; rawValue: string }): void {
     // this.shoppingCartService.updateItemQuantity(event.productId, event.newQuantity);
     // this.cartState = this.shoppingCartService.getCartState();
-    const item = this.cartState.items.find(i => i.product.id === event.productId);
+    const item = this.cartState.items.find((i) => i.product.id === event.productId);
     if (item) {
       const newQuantity = Number(event.rawValue);
 
       if (newQuantity > 0) {
         item.quantity = newQuantity;
-        this.recalculateMockState()
-      }
-      else{
+        this.recalculateMockState();
+      } else {
         this.onItemRemoved(event.productId);
       }
     }
@@ -52,8 +51,8 @@ export class ShoppingCartDetailsComponent implements OnInit {
   onItemRemoved(productId: string): void {
     // this.shoppingCartService.removeItem(productId);
     // this.cartState = this.shoppingCartService.getCartState();
-    this.cartState.items = this.cartState.items.filter(item => item.product.id !== productId);
-    this.recalculateMockState()
+    this.cartState.items = this.cartState.items.filter((item) => item.product.id !== productId);
+    this.recalculateMockState();
   }
 
   private recalculateMockState(): void {
@@ -61,7 +60,7 @@ export class ShoppingCartDetailsComponent implements OnInit {
 
     this.cartState.totalPrice = this.cartState.items.reduce(
       (sum, item) => sum.plus(new Decimal(item.product.price).times(item.quantity)),
-      new Decimal(0)
+      new Decimal(0),
     );
   }
 }

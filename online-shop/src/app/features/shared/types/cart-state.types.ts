@@ -1,4 +1,4 @@
-import {CartItem} from './cart-item.types';
+import { CartItem } from './cart-item.types';
 import Decimal from 'decimal.js';
 
 export interface CartState {

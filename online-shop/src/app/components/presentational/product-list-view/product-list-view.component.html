@@ -5,19 +5,19 @@
 <div class="table-container">
   <table class="product-table">
     <thead>
-    <tr>
-      <th></th>
-      <th>Name</th>
-      <th>Price</th>
-      <th>Actions</th>
-    </tr>
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
-      @for(product of products; track product.id){
+      @for (product of products; track product.id) {
         <tr>
-          <td><img [src]="product.imageUrl" alt="{{product.name}}" width="50" height="50"></td>
-          <td>{{product.name}}</td>
-          <td>{{product.price}}</td>
+          <td><img [src]="product.imageUrl" alt="{{ product.name }}" width="50" height="50" /></td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
           <td>
             <button class="btn btn-primary" (click)="onProductClick(product.id)">
               View Details

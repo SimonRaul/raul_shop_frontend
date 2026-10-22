@@ -4,6 +4,6 @@ import { ShoppingCartDetailsComponent } from './components/containers/shopping-c
 export const shoppingCartRoutes: Routes = [
   {
     path: '',
-    component: ShoppingCartDetailsComponent
-  }
+    component: ShoppingCartDetailsComponent,
+  },
 ];

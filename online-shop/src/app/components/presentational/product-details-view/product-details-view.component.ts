@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {Product} from '../../../features/shared/types/products.types';
+import { Component, Input } from '@angular/core';
+import { Product } from '../../../features/shared/types/products.types';
 
 @Component({
   imports: [],
@@ -8,6 +8,5 @@ import {Product} from '../../../features/shared/types/products.types';
   templateUrl: './product-details-view.component.html',
 })
 export class ProductDetailsViewComponent {
-  @Input({required: true}) productData!: Product;
-
+  @Input({ required: true }) productData!: Product;
 }

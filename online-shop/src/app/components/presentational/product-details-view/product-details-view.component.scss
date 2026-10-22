@@ -9,7 +9,7 @@
 
 .product-image {
   padding-right: 2rem;
-  border-right: 1px solid #21B593;
+  border-right: 1px solid #21b593;
 
   img {
     width: 100%;
@@ -28,9 +28,9 @@
   align-content: start;
 
   grid-template-areas:
-    "title category"
-    "desc desc"
-    "weight weight";
+    'title category'
+    'desc desc'
+    'weight weight';
 }
 
 .item-title-price {
@@ -45,7 +45,7 @@
   h2 {
     margin: 0;
     font-size: 1.5rem;
-    color: #146E5B;
+    color: #146e5b;
   }
 }
 
@@ -60,7 +60,7 @@
   h3 {
     margin: 0 0 0.25rem 0;
     font-size: 1rem;
-    color: #17806E;
+    color: #17806e;
   }
 
   p {
@@ -91,7 +91,7 @@
     margin: 0;
     font-weight: 500;
     font-size: 1rem;
-    color: #17806E;
+    color: #17806e;
   }
 }
 
@@ -103,17 +103,17 @@
   .product-image {
     padding-right: 0;
     border-right: none;
-    border-bottom: 1px solid #21B593;
+    border-bottom: 1px solid #21b593;
     padding-bottom: 2rem;
   }
 
   .product-info {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "title"
-      "category"
-      "desc"
-      "weight";
+      'title'
+      'category'
+      'desc'
+      'weight';
   }
 
   .item-category {
