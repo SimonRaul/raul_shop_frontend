@@ -1,11 +1,11 @@
 <div class="shopping-cart">
-  @if (items.length > 0) {
+  @if (items().length > 0) {
     <div class="page-title">
       <h1>Your Cart</h1>
     </div>
     <div class="cart-container">
       <div class="cart-items">
-        @for (item of items; track item.product.id) {
+        @for (item of items(); track item.product.id) {
           <div class="cart-item">
             <div class="item-image">
               <img [src]="item.product.imageUrl" [alt]="item.product.name" />
@@ -23,10 +23,14 @@
                     [value]="item.quantity"
                     min="1"
                     class="qty-input"
-                    (change)="onQuantityChange(item.product.id, qtyInput.value)"
+                    (change)="
+                      quantityChanged.emit({ productId: item.product.id, rawValue: qtyInput.value })
+                    "
                   />
                 </div>
-                <button class="btn-delete" (click)="onRemove(item.product.id)">Delete</button>
+                <button class="btn-delete" (click)="itemRemoved.emit(item.product.id)">
+                  Delete
+                </button>
               </div>
             </div>
           </div>
@@ -36,11 +40,11 @@
         <h3>Order Summary</h3>
         <div class="summary-row">
           <span>Total Items:</span>
-          <span>{{ totalItems }}</span>
+          <span>{{ totalItems() }}</span>
         </div>
         <div class="summary-row total">
           <span>Total Price:</span>
-          <span>{{ totalPrice }} RON</span>
+          <span>{{ totalPrice() }} RON</span>
         </div>
         <button class="btn-checkout" (click)="onCheckout()">Proceed to Checkout</button>
       </div>

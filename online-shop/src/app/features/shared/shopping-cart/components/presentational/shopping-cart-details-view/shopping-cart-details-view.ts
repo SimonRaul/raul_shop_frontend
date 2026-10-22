@@ -1,27 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CartItem } from '../../../../types/cart-item.types';
 
 @Component({
-  standalone: false,
+  imports: [],
   selector: 'app-shopping-cart-details-view',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './shopping-cart-details-view.scss',
   templateUrl: './shopping-cart-details-view.html',
 })
 export class ShoppingCartDetailsView {
-  @Input({ required: true }) totalPrice!: number;
-  @Input({ required: true }) totalItems!: number;
-  @Input({ required: true }) items!: CartItem[];
+  totalPrice = input.required<number>();
+  totalItems = input.required<number>();
+  items = input.required<CartItem[]>();
 
-  @Output() quantityChanged = new EventEmitter<{ productId: string; rawValue: string }>();
-  @Output() itemRemoved = new EventEmitter<string>();
-
-  onQuantityChange(productId: string, rawValue: string): void {
-    this.quantityChanged.emit({ productId, rawValue });
-  }
-
-  onRemove(productId: string): void {
-    this.itemRemoved.emit(productId);
-  }
+  quantityChanged = output<{ productId: string; rawValue: string }>();
+  itemRemoved = output<string>();
 
   onCheckout(): void {}
 }

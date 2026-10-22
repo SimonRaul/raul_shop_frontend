@@ -1,24 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Product } from '../../../features/shared/types/products.types';
-import { mockProducts } from '../../../mocks/products.mocks';
+import { createMockProduct, mockProducts } from '../../../mocks/products.mocks';
 import { ProductDetailsViewComponent } from '../../presentational/product-details-view/product-details-view.component';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [ProductDetailsViewComponent],
   selector: 'app-product-details',
-  template: ` @if (product) {
-      <app-product-details-view [productData]="product"></app-product-details-view>
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: ` @if (product(); as p) {
+      <app-product-details-view [productData]="p"></app-product-details-view>
     } @else {
       <p>Loading Product Details...</p>
     }`,
 })
 export class ProductDetailsComponent implements OnInit {
-  product: Product | undefined;
-  constructor(private route: ActivatedRoute) {}
+  product = signal<Product | undefined>(undefined);
+  private destroyRef = inject(DestroyRef);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const idParam = params.get('id');
 
       if (idParam) {
@@ -28,6 +38,9 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   loadProductDetails(productId: string): void {
-    this.product = mockProducts.find((p) => p.id === productId);
+    const product = mockProducts.find((p) => p.id === productId);
+    if (product) {
+      this.product.set(product);
+    }
   }
 }

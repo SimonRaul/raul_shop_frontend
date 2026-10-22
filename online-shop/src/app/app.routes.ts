@@ -20,9 +20,9 @@ export const routes: Routes = [
   },
   {
     path: 'shopping-cart',
-    loadChildren: () =>
-      import('./features/shared/shopping-cart/shopping-cart-module').then(
-        (m) => m.ShoppingCartModule,
+    loadComponent: () =>
+      import('./features/shared/shopping-cart/components/containers/shopping-cart-details/shopping-cart-details.component').then(
+        (m) => m.ShoppingCartDetailsComponent,
       ),
   },
 ];
