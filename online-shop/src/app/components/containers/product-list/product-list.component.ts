@@ -3,6 +3,8 @@ import { mockProducts } from '../../../mocks/products.mocks';
 import { Product } from '../../../features/shared/types/products.types';
 import { ProductListViewComponent } from '../../presentational/product-list-view/product-list-view.component';
 import { Router } from '@angular/router';
+import { ProductsService } from '../../../services/products.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [ProductListViewComponent],
@@ -11,17 +13,10 @@ import { Router } from '@angular/router';
   template: ` <app-product-list-view [products]="products()" (productClicked)="goToDetails($event)">
   </app-product-list-view>`,
 })
-export class ProductListComponent implements OnInit {
-  products = signal<Product[]>([]);
+export class ProductListComponent {
   private router: Router = inject(Router);
-
-  ngOnInit(): void {
-    this.loadProducts();
-  }
-
-  loadProducts(): void {
-    this.products.set(mockProducts);
-  }
+  private readonly productsService: ProductsService = inject(ProductsService);
+  products = toSignal(this.productsService.getAllProducts(), { initialValue: [] });
 
   goToDetails(productId: string): void {
     this.router.navigate(['/product', productId]);

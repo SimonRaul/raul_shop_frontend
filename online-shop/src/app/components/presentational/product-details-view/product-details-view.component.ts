@@ -10,5 +10,6 @@ import { Product } from '../../../features/shared/types/products.types';
 })
 export class ProductDetailsViewComponent {
   productData = input.required<Product>();
-  addToCartClicked = output<string>();
+  addToCartClicked = output<Product>();
+  deleteProductClicked = output<string>();
 }

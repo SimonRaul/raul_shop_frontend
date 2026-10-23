@@ -46,6 +46,25 @@
           <span>Total Price:</span>
           <span>{{ totalPrice() }} RON</span>
         </div>
+        <input
+          type="text"
+          placeholder="Enter your country"
+          [(ngModel)]="country"
+          class="address-input"
+        />
+        <input type="text" placeholder="Enter your city" [(ngModel)]="city" class="address-input" />
+        <input
+          type="text"
+          placeholder="Enter your county"
+          [(ngModel)]="county"
+          class="address-input"
+        />
+        <input
+          type="text"
+          placeholder="Enter your street address"
+          [(ngModel)]="streetAddress"
+          class="address-input"
+        />
         <button class="btn-checkout" (click)="onCheckout()">Proceed to Checkout</button>
       </div>
     </div>

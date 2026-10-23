@@ -5,3 +5,9 @@ export interface CartState {
   totalItems: number;
   totalPrice: number;
 }
+
+export const initialCartState: CartState = {
+  items: [],
+  totalItems: 0,
+  totalPrice: 0,
+};

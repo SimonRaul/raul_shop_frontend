@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
-import { CartState } from '../../../../types/cart-state.types';
-import { mockCartState } from '../../../../../../mocks/cart-state.mocks';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
+import { ShoppingCartService } from '../../../services/shopping-cart.service';
+import { Address } from '../../../../types/address.types';
+import { Checkout } from '../../../../types/checkout.types';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [ShoppingCartDetailsView],
@@ -12,66 +14,42 @@ import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-deta
       [totalPrice]="cartState().totalPrice"
       [totalItems]="cartState().totalItems"
       [items]="cartState().items"
+      (checkoutClicked)="onCheckout($event)"
       (quantityChanged)="onQuantityChange($event)"
       (itemRemoved)="onItemRemoved($event)"
     ></app-shopping-cart-details-view>
   `,
 })
-export class ShoppingCartDetailsComponent implements OnInit {
-  cartState = signal<CartState>({
-    items: [],
-    totalItems: 0,
-    totalPrice: 0,
-  });
-
-  // constructor(private shoppingCartService: any) {
-  // }
-
-  ngOnInit(): void {
-    // this.cartState = this.shoppingCartService.getCartState();
-    this.cartState.set(mockCartState);
-  }
+export class ShoppingCartDetailsComponent {
+  private readonly shoppingCartService = inject(ShoppingCartService);
+  cartState = this.shoppingCartService.getCartState();
+  private readonly router = inject(Router);
 
   onQuantityChange(event: { productId: string; rawValue: string }): void {
-    // this.shoppingCartService.updateItemQuantity(event.productId, event.newQuantity);
-    // this.cartState = this.shoppingCartService.getCartState();
-    const item = this.cartState().items.find((i) => i.product.id === event.productId);
-    if (item) {
-      const newQuantity = Number(event.rawValue);
-
-      if (newQuantity > 0) {
-        item.quantity = newQuantity;
-        this.recalculateMockState();
-      } else {
-        this.onItemRemoved(event.productId);
-      }
-    }
+    this.shoppingCartService.updateItemQuantity(event.productId, event.rawValue);
   }
 
   onItemRemoved(productId: string): void {
-    // this.shoppingCartService.removeItem(productId);
-    // this.cartState = this.shoppingCartService.getCartState();
-    this.cartState.set({
-      ...this.cartState(),
-      items: this.cartState().items.filter((item) => item.product.id !== productId),
-    });
-    this.recalculateMockState();
+    this.shoppingCartService.removeItem(productId);
   }
+  onCheckout(address: Address): void {
+    const checkoutData: Checkout = {
+      deliveryAddress: address,
+      products: this.cartState().items.map((item) => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+      })),
+      createdAt: new Date(),
+    };
 
-  private recalculateMockState(): void {
-    this.cartState.set({
-      ...this.cartState(),
-      totalItems: this.cartState().items.reduce((sum, item) => sum + item.quantity, 0),
-    });
-
-    const rawTotal = this.cartState().items.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0,
-    );
-
-    this.cartState.set({
-      ...this.cartState(),
-      totalPrice: Number(rawTotal.toFixed(2)),
+    this.shoppingCartService.createOrder(checkoutData).subscribe({
+      next: (response) => {
+        this.shoppingCartService.clearCart();
+        this.router.navigate(['/products']);
+      },
+      error: (err) => {
+        console.error('Eroare la trimiterea comenzii:', err);
+      },
     });
   }
 }
