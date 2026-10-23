@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { Product } from '../../../features/shared/types/products.types';
-import { createMockProduct, mockProducts } from '../../../mocks/products.mocks';
+import { mockProducts } from '../../../mocks/products.mocks';
 import { ProductDetailsViewComponent } from '../../presentational/product-details-view/product-details-view.component';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,7 +17,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-product-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` @if (product(); as p) {
-      <app-product-details-view [productData]="p"></app-product-details-view>
+      <app-product-details-view
+        [productData]="p"
+        (addToCartClicked)="onAddToCartClicked($event)"
+      ></app-product-details-view>
     } @else {
       <p>Loading Product Details...</p>
     }`,
@@ -28,13 +31,11 @@ export class ProductDetailsComponent implements OnInit {
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      const idParam = params.get('id');
+    const idParam = this.route.snapshot.paramMap.get('id');
 
-      if (idParam) {
-        this.loadProductDetails(idParam);
-      }
-    });
+    if (idParam) {
+      this.loadProductDetails(idParam);
+    }
   }
 
   loadProductDetails(productId: string): void {
@@ -43,4 +44,6 @@ export class ProductDetailsComponent implements OnInit {
       this.product.set(product);
     }
   }
+
+  onAddToCartClicked(productId: string): void {}
 }

@@ -93,7 +93,7 @@
 
   &-primary {
     background-color: var(--primary-color);
-    color: #000000;
+    color: var(--button-text);
 
     &:hover {
       background-color: var(--primary-hover);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Product } from '../../../features/shared/types/products.types';
 
 @Component({
@@ -10,4 +10,5 @@ import { Product } from '../../../features/shared/types/products.types';
 })
 export class ProductDetailsViewComponent {
   productData = input.required<Product>();
+  addToCartClicked = output<string>();
 }

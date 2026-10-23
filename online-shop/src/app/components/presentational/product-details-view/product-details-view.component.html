@@ -22,6 +22,9 @@
       <div class="item-weight">
         <p>Weight: {{ product.weight }} kg</p>
       </div>
+      <button class="btn-add-to-cart" (click)="addToCartClicked.emit(product.id)">
+        Add to Cart
+      </button>
     </div>
   </div>
 }

@@ -30,7 +30,8 @@
   grid-template-areas:
     'title category'
     'desc desc'
-    'weight weight';
+    'weight weight'
+    '. add-to-cart';
 }
 
 .item-title-price {
@@ -95,6 +96,24 @@
   }
 }
 
+.btn-add-to-cart {
+  grid-area: add-to-cart;
+  justify-self: end;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: var(--button-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--primary-hover);
+  }
+}
+
 @media (max-width: 768px) {
   .product-details-container {
     grid-template-columns: 1fr;
@@ -113,7 +132,8 @@
       'title'
       'category'
       'desc'
-      'weight';
+      'weight'
+      'add-to-cart';
   }
 
   .item-category {
