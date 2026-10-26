@@ -1,16 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
-body {
-  background-color: #fffdf2;
-}
-
 :root {
   --primary-color: #4a7c59;
   --primary-hover: #5a8f6a;
+  --secondary-color: #007bb5;
+  --secondary-hover: #008cba;
   --bg-surface: #ffffff;
-  --bg-body: #f5f7f5;
+  --bg-body: #fffdf2;
   --border-color: #dde2de;
   --text-main: #2d3748;
   --button-text: #ffffff;
   --danger-color: #b81212;
   --danger-hover: #ff0000;
+  --font-primary: 'Inter', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-body);
+  font-family: var(--font-primary);
+  color: var(--text-main);
+  line-height: 1.6;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-main);
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
 }

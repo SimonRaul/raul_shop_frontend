@@ -17,6 +17,14 @@ export class ProductsService {
   }
 
   deleteProduct(productId: string) {
-    return this.http.delete(`${this.apiUrl}/${productId}`);
+    return this.http.delete<void>(`${this.apiUrl}/${productId}`);
+  }
+
+  updateProduct(productId: string, productData: any) {
+    return this.http.put<Product>(`${this.apiUrl}/${productId}`, productData);
+  }
+
+  createProduct(productData: any) {
+    return this.http.post<Product>(`${this.apiUrl}`, productData);
   }
 }

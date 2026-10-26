@@ -22,6 +22,7 @@ import { ShoppingCartService } from '../../../features/shared/shopping-cart/serv
         [productData]="p"
         (addToCartClicked)="onAddToCartClicked()"
         (deleteProductClicked)="onDelete($event)"
+        (updateProductClicked)="onUpdate($event)"
       ></app-product-details-view>
     } @else {
       <p>Loading Product Details...</p>
@@ -67,5 +68,9 @@ export class ProductDetailsComponent implements OnInit {
       .subscribe(() => {
         this.router.navigate(['/products']);
       });
+  }
+
+  onUpdate(productId: string): void {
+    this.router.navigate(['/products', productId, 'edit']);
   }
 }

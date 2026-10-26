@@ -20,4 +20,5 @@ import { Product } from '../../../features/shared/types/products.types';
 export class ProductListViewComponent {
   products = input.required<Product[]>();
   productClicked = output<string>();
+  addProductClicked = output<void>();
 }

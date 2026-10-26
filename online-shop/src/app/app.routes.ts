@@ -25,4 +25,18 @@ export const routes: Routes = [
         (m) => m.ShoppingCartDetailsComponent,
       ),
   },
+  {
+    path: 'products/:id/edit',
+    loadComponent: () =>
+      import('./components/containers/products-form/products-form.component').then(
+        (m) => m.ProductsFormComponent,
+      ),
+  },
+  {
+    path: 'products/new',
+    loadComponent: () =>
+      import('./components/containers/products-form/products-form.component').then(
+        (m) => m.ProductsFormComponent,
+      ),
+  },
 ];

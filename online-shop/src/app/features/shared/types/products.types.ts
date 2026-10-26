@@ -8,3 +8,12 @@ export interface Product {
   categoryDescription: string;
   imageUrl: string;
 }
+
+export interface CreateProductRequest {
+  name: string;
+  description: string;
+  price: number;
+  weight: number;
+  categoryId: string;
+  imageUrl: string;
+}
