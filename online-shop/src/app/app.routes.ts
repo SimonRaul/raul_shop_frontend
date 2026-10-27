@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 import { ProductListComponent } from './components/containers/product-list/product-list.component';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'products',
     pathMatch: 'full',
+    canActivate: [authGuard],
   },
   {
     path: 'product/:id',
@@ -13,10 +15,12 @@ export const routes: Routes = [
       import('./components/containers/product-details/product-details.component').then(
         (m) => m.ProductDetailsComponent,
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'products',
     component: ProductListComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'shopping-cart',
@@ -24,6 +28,7 @@ export const routes: Routes = [
       import('./features/shared/shopping-cart/components/containers/shopping-cart-details/shopping-cart-details.component').then(
         (m) => m.ShoppingCartDetailsComponent,
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'products/:id/edit',
@@ -31,12 +36,29 @@ export const routes: Routes = [
       import('./components/containers/products-form/products-form.component').then(
         (m) => m.ProductsFormComponent,
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'products/new',
     loadComponent: () =>
       import('./components/containers/products-form/products-form.component').then(
         (m) => m.ProductsFormComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./features/shared/components/containers/profile/profile.component').then(
+        (m) => m.ProfileComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./components/containers/login-form/login-form.component').then(
+        (m) => m.LoginFormComponent,
       ),
   },
 ];

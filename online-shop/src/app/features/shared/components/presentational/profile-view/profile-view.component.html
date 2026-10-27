@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1 class="page-title">Your Profile</h1>
+</div>
+
+@if (currentUser(); as user) {
+  <div class="profile-container">
+    <div class="profile-card">
+      <div class="profile-avatar">
+        {{ user.firstName?.charAt(0) | uppercase }}{{ user.lastName?.charAt(0) | uppercase }}
+      </div>
+
+      <div class="user-info">
+        <div class="info-group">
+          <span class="label">First Name</span>
+          <span class="value">{{ user.firstName }}</span>
+        </div>
+
+        <div class="info-group">
+          <span class="label">Last Name</span>
+          <span class="value">{{ user.lastName }}</span>
+        </div>
+
+        <div class="info-group">
+          <span class="label">Email</span>
+          <span class="value">{{ user.email }}</span>
+        </div>
+
+        <div class="info-group">
+          <span class="label">Username</span>
+          <span class="value">{{ user.username }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="loading-state">
+    <p>Loading profile data...</p>
+  </div>
+}

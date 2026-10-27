@@ -4,6 +4,7 @@ import { ShoppingCartService } from '../../../services/shopping-cart.service';
 import { Address } from '../../../../types/address.types';
 import { Checkout } from '../../../../types/checkout.types';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../../../services/auth.service';
 
 @Component({
   imports: [ShoppingCartDetailsView],
@@ -24,6 +25,7 @@ export class ShoppingCartDetailsComponent {
   private readonly shoppingCartService = inject(ShoppingCartService);
   cartState = this.shoppingCartService.getCartState();
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   onQuantityChange(event: { productId: string; rawValue: string }): void {
     this.shoppingCartService.updateItemQuantity(event.productId, event.rawValue);
@@ -39,6 +41,7 @@ export class ShoppingCartDetailsComponent {
         productId: item.product.id,
         quantity: item.quantity,
       })),
+      customerId: this.authService.currentUser()?.id || '',
       createdAt: new Date(),
     };
 

@@ -1,8 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { PageHeaderComponent } from './features/shared/components/containers/page-header/page-header.component';
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, PageHeaderComponent],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',

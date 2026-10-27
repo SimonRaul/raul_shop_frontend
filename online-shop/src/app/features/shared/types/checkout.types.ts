@@ -7,4 +7,5 @@ export interface Checkout {
     productId: string;
     quantity: number;
   }[];
+  customerId: string;
 }

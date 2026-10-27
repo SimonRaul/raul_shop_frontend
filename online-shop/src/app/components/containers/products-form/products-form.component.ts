@@ -1,4 +1,11 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { ProductCategoryService } from '../../../services/product-category.service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ProductsFormViewComponent } from '../../presentational/products-form-view/products-form-view.component';
@@ -9,6 +16,7 @@ import { CreateProductRequest, Product } from '../../../features/shared/types/pr
 @Component({
   imports: [ProductsFormViewComponent],
   selector: 'app-products-form',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<app-products-form-view
     [categories]="categories()"
     [initialData]="productToEdit()"

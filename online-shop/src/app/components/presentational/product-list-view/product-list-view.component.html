@@ -1,9 +1,11 @@
 <div class="page-header">
   <h1 class="page-title">ProductsService List</h1>
 
-  <div class="page-action">
-    <button class="btn-add" (click)="addProductClicked.emit()">Add Product</button>
-  </div>
+  @if (isAdmin()) {
+    <div class="page-action">
+      <button class="btn-add" (click)="addProductClicked.emit()">Add Product</button>
+    </div>
+  }
 </div>
 
 <div class="table-container">

@@ -21,4 +21,5 @@ export class ProductListViewComponent {
   products = input.required<Product[]>();
   productClicked = output<string>();
   addProductClicked = output<void>();
+  isAdmin = input.required<boolean>();
 }

@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Category } from '../../../features/shared/types/product-category.types';
 import { CreateProductRequest, Product } from '../../../features/shared/types/products.types';
@@ -6,6 +6,7 @@ import { CreateProductRequest, Product } from '../../../features/shared/types/pr
 @Component({
   imports: [ReactiveFormsModule],
   selector: 'app-products-form-view',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './products-form-view.component.scss',
   templateUrl: './products-form-view.component.html',
 })
