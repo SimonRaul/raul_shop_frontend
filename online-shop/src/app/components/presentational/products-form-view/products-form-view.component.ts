@@ -14,7 +14,7 @@ export class ProductsFormViewComponent {
   private formBuilder = inject(FormBuilder);
   categories = input.required<Category[]>();
   formSubmitted = output<CreateProductRequest>();
-  initialData = input<Product | undefined>(undefined);
+  initialData = input<Product | null>(null);
   cancelClicked = output<void>();
 
   productForm = this.formBuilder.group({

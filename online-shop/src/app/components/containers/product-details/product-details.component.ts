@@ -1,19 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { Product } from '../../../features/shared/types/products.types';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { ProductDetailsViewComponent } from '../../presentational/product-details-view/product-details-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ProductsService } from '../../../services/products.service';
-import { ShoppingCartService } from '../../../features/shared/shopping-cart/services/shopping-cart.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../features/shared/types/users.types';
+import { Store } from '@ngrx/store';
+import { ProductActions, ShoppingCartActions } from '../../../features/shared/state/app.actions';
+import { selectProducts } from '../../../features/shared/state/app.reducers';
 
 @Component({
   imports: [ProductDetailsViewComponent],
@@ -32,48 +24,35 @@ import { UserRole } from '../../../features/shared/types/users.types';
     }`,
 })
 export class ProductDetailsComponent implements OnInit {
-  product = signal<Product | undefined>(undefined);
-  private destroyRef = inject(DestroyRef);
-  private readonly route: ActivatedRoute = inject(ActivatedRoute);
-  private readonly productsService = inject(ProductsService);
-  private readonly shoppingCartService = inject(ShoppingCartService);
+  private readonly store = inject(Store);
+  private readonly route = inject(ActivatedRoute);
   private readonly authService = inject(AuthService);
-  private router: Router = inject(Router);
-
+  private readonly router = inject(Router);
+  productsState = this.store.selectSignal(selectProducts);
+  product = computed(() => this.productsState().selectedProduct);
   isAdmin = this.authService.getRole() === UserRole.ADMIN;
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
 
     if (idParam) {
-      this.loadProductDetails(idParam);
+      this.store.dispatch(ProductActions.loadSingleProduct({ productId: idParam }));
     }
-  }
-
-  loadProductDetails(productId: string): void {
-    this.productsService
-      .getProductById(productId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((data) => {
-        this.product.set(data);
-      });
   }
 
   onAddToCartClicked(): void {
     const currentProduct = this.product();
 
     if (currentProduct) {
-      this.shoppingCartService.addToCart(currentProduct);
+      this.store.dispatch(
+        ShoppingCartActions.addToCart({ productId: currentProduct.id, quantity: 1 }),
+      );
     }
   }
 
   onDelete(productId: string): void {
-    this.productsService
-      .deleteProduct(productId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.router.navigate(['/products']);
-      });
+    this.store.dispatch(ProductActions.deleteProduct({ productId }));
+    this.router.navigate(['/products']);
   }
 
   onUpdate(productId: string): void {

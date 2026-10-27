@@ -1,49 +1,37 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { ProductCategoryService } from '../../../services/product-category.service';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { ProductsFormViewComponent } from '../../presentational/products-form-view/products-form-view.component';
-import { ProductsService } from '../../../services/products.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CreateProductRequest, Product } from '../../../features/shared/types/products.types';
+import { CreateProductRequest } from '../../../features/shared/types/products.types';
+import { Store } from '@ngrx/store';
+import { selectCategories, selectProducts } from '../../../features/shared/state/app.reducers';
+import { CategoryActions, ProductActions } from '../../../features/shared/state/app.actions';
 
 @Component({
   imports: [ProductsFormViewComponent],
   selector: 'app-products-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<app-products-form-view
-    [categories]="categories()"
+    [categories]="categoriesList()"
     [initialData]="productToEdit()"
     (formSubmitted)="onFormSubmitted($event)"
     (cancelClicked)="onCancel()"
   ></app-products-form-view>`,
 })
 export class ProductsFormComponent implements OnInit {
-  private readonly categoryService = inject(ProductCategoryService);
-  private readonly productsService = inject(ProductsService);
+  private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
-  categories = toSignal(this.categoryService.getAllCategories(), { initialValue: [] });
-
-  productToEdit = signal<Product | undefined>(undefined);
+  private readonly categoriesState = this.store.selectSignal(selectCategories);
+  private readonly productsState = this.store.selectSignal(selectProducts);
+  categoriesList = computed(() => this.categoriesState().list);
+  productToEdit = computed(() => this.productsState().selectedProduct);
 
   ngOnInit(): void {
+    this.store.dispatch(CategoryActions.loadCategories());
     const productId = this.route.snapshot.paramMap.get('id');
 
     if (productId) {
-      this.productsService
-        .getProductById(productId)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((product) => {
-          this.productToEdit.set(product);
-        });
+      this.store.dispatch(ProductActions.loadSingleProduct({ productId: productId }));
     }
   }
 
@@ -51,25 +39,18 @@ export class ProductsFormComponent implements OnInit {
     const currentProduct = this.productToEdit();
 
     if (currentProduct && currentProduct.id) {
-      this.productsService
-        .updateProduct(currentProduct.id, formData)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          this.router.navigate(['/products']);
-        });
+      this.store.dispatch(
+        ProductActions.updateProduct({ productId: currentProduct.id, productData: formData }),
+      );
     } else {
-      this.productsService
-        .createProduct(formData)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          this.router.navigate(['/products']);
-        });
+      this.store.dispatch(ProductActions.addProduct({ product: formData }));
     }
   }
 
   onCancel(): void {
-    if (this.productToEdit()) {
-      this.router.navigate(['/product', this.productToEdit()!.id]);
+    const current = this.productToEdit();
+    if (current) {
+      this.router.navigate(['/product', current.id]);
     } else {
       this.router.navigate(['/products']);
     }

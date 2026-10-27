@@ -1,8 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { UserLoginRequest } from '../../../features/shared/types/users.types';
 import { LoginFormViewComponent } from '../../presentational/login-form-view/login-form-view.component';
-import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { selectAuth } from '../../../features/shared/state/app.reducers';
+import { AuthActions } from '../../../features/shared/state/app.actions';
 
 @Component({
   imports: [LoginFormViewComponent],
@@ -13,16 +14,11 @@ import { Router } from '@angular/router';
   ></app-login-form-view>`,
 })
 export class LoginFormComponent {
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
-  errorMessage = signal<string | null>(null);
+  private store = inject(Store);
+  private authState = this.store.selectSignal(selectAuth);
+  errorMessage = computed(() => this.authState().error);
 
   onLogin(formData: UserLoginRequest) {
-    this.authService.login(formData).subscribe({
-      next: () => this.router.navigate(['/']),
-      error: (err) => {
-        this.errorMessage.set('Login failed. Please try again.');
-      },
-    });
+    this.store.dispatch(AuthActions.login({ request: formData }));
   }
 }

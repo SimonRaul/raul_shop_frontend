@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
-import { ShoppingCartService } from '../../../services/shopping-cart.service';
 import { Address } from '../../../../types/address.types';
 import { Checkout } from '../../../../types/checkout.types';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../../../services/auth.service';
+import { Store } from '@ngrx/store';
+import { selectAuth, selectShoppingCart } from '../../../../state/app.reducers';
+import { ShoppingCartActions } from '../../../../state/app.actions';
 
 @Component({
   imports: [ShoppingCartDetailsView],
@@ -12,9 +13,9 @@ import { AuthService } from '../../../../../../services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-shopping-cart-details-view
-      [totalPrice]="cartState().totalPrice"
-      [totalItems]="cartState().totalItems"
-      [items]="cartState().items"
+      [totalPrice]="totalPrice()"
+      [totalItems]="totalItems()"
+      [items]="cartItems()"
       (checkoutClicked)="onCheckout($event)"
       (quantityChanged)="onQuantityChange($event)"
       (itemRemoved)="onItemRemoved($event)"
@@ -22,37 +23,46 @@ import { AuthService } from '../../../../../../services/auth.service';
   `,
 })
 export class ShoppingCartDetailsComponent {
-  private readonly shoppingCartService = inject(ShoppingCartService);
-  cartState = this.shoppingCartService.getCartState();
+  private store = inject(Store);
+  private cartState = this.store.selectSignal(selectShoppingCart);
+  private authState = this.store.selectSignal(selectAuth);
+  currentUser = computed(() => this.authState().user);
   private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
+  totalPrice = computed(() => this.cartState().totalPrice);
+  totalItems = computed(() => this.cartState().totalItems);
+  cartItems = computed(() => this.cartState().items);
 
   onQuantityChange(event: { productId: string; rawValue: string }): void {
-    this.shoppingCartService.updateItemQuantity(event.productId, event.rawValue);
+    this.store.dispatch(
+      ShoppingCartActions.updateQuantity({
+        productId: event.productId,
+        newQuantity: Number(event.rawValue),
+      }),
+    );
   }
 
   onItemRemoved(productId: string): void {
-    this.shoppingCartService.removeItem(productId);
+    this.store.dispatch(ShoppingCartActions.removeFromCart({ productId }));
   }
+
   onCheckout(address: Address): void {
+    const user = this.currentUser();
+
+    if (!user) {
+      console.error('Cannot checkout: User is not authenticated.');
+      return;
+    }
+
     const checkoutData: Checkout = {
       deliveryAddress: address,
-      products: this.cartState().items.map((item) => ({
+      products: this.cartItems().map((item) => ({
         productId: item.product.id,
         quantity: item.quantity,
       })),
-      customerId: this.authService.currentUser()?.id || '',
+      customerId: user.id,
       createdAt: new Date(),
     };
 
-    this.shoppingCartService.createOrder(checkoutData).subscribe({
-      next: (response) => {
-        this.shoppingCartService.clearCart();
-        this.router.navigate(['/products']);
-      },
-      error: (err) => {
-        console.error('Eroare la trimiterea comenzii:', err);
-      },
-    });
+    this.store.dispatch(ShoppingCartActions.checkout({ checkoutData }));
   }
 }
