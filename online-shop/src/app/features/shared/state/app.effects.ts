@@ -5,7 +5,7 @@ import { ProductsService } from '../../../services/products.service';
 import { ProductCategoryService } from '../../../services/product-category.service';
 import { ShoppingCartService } from '../shopping-cart/services/shopping-cart.service';
 import { Router } from '@angular/router';
-import { AuthActions, ProductActions, CategoryActions, ShoppingCartActions } from './app.actions';
+import { AuthActions, ProductActions, CategoryActions } from './app.actions';
 import { catchError, map, switchMap, tap, of } from 'rxjs';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class AppEffects {
   private readonly authService = inject(AuthService);
   private readonly productsService = inject(ProductsService);
   private readonly categoryService = inject(ProductCategoryService);
-  private readonly cartService = inject(ShoppingCartService);
+  private readonly shoppingCartService = inject(ShoppingCartService);
   private readonly router = inject(Router);
 
   login$ = createEffect(() =>
@@ -22,14 +22,63 @@ export class AppEffects {
       ofType(AuthActions.login),
       switchMap(({ request }) =>
         this.authService.login(request).pipe(
-          map((user) => {
-            const token = this.authService.getToken() || '';
-            return AuthActions.loginSuccess({ user, token });
-          }),
+          map(({ user, token }) => AuthActions.loginSuccess({ user, token })),
           catchError((error) => of(AuthActions.loginFailure({ error: error.message }))),
         ),
       ),
     ),
+  );
+
+  validateSession$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.validateSession),
+      switchMap(() => {
+        const token = this.authService.getToken();
+
+        if (!token || !this.authService.hasValidSession()) {
+          return of(AuthActions.sessionInvalid());
+        }
+
+        return this.authService.validateSession().pipe(
+          map((user) => AuthActions.sessionValid({ user, token })),
+          catchError(() => of(AuthActions.sessionInvalid())),
+        );
+      }),
+    ),
+  );
+
+  clearFailedLogin$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.loginFailure),
+        tap(() => this.authService.logout()),
+      ),
+    { dispatch: false },
+  );
+
+  clearInvalidSession$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.sessionInvalid),
+        tap(() => {
+          this.authService.logout();
+          this.shoppingCartService.clearCart();
+        }),
+      ),
+    { dispatch: false },
+  );
+
+  logout$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.logout),
+        tap(() => {
+          this.authService.logout();
+          this.shoppingCartService.clearCart();
+          this.router.navigate(['/login']);
+        }),
+      ),
+    { dispatch: false },
   );
 
   loginSuccessRedirect$ = createEffect(
@@ -91,6 +140,18 @@ export class AppEffects {
     ),
   );
 
+  deleteProduct$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProductActions.deleteProduct),
+      switchMap(({ productId }) =>
+        this.productsService.deleteProduct(productId).pipe(
+          map(() => ProductActions.deleteProductSuccess({ productId })),
+          catchError((error) => of(ProductActions.deleteProductFailure({ error: error.message }))),
+        ),
+      ),
+    ),
+  );
+
   productFormSuccessRedirect$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -109,35 +170,12 @@ export class AppEffects {
       ofType(CategoryActions.loadCategories),
       switchMap(() =>
         this.categoryService.getAllCategories().pipe(
-          map((categories) =>
-            CategoryActions.loadCategoriesSuccess({ categories: categories as any }),
-          ),
+          map((categories) => CategoryActions.loadCategoriesSuccess({ categories })),
           catchError((error) =>
             of(CategoryActions.loadCategoriesFailure({ error: error.message })),
           ),
         ),
       ),
     ),
-  );
-
-  checkout$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(ShoppingCartActions.checkout),
-      switchMap(({ checkoutData }) =>
-        this.cartService.createOrder(checkoutData).pipe(
-          map(() => ShoppingCartActions.checkoutSuccess()),
-          catchError((error) => of(ShoppingCartActions.checkoutFailure({ error: error.message }))),
-        ),
-      ),
-    ),
-  );
-
-  checkoutSuccessRedirect$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(ShoppingCartActions.checkoutSuccess),
-        tap(() => this.router.navigate(['/products'])),
-      ),
-    { dispatch: false },
   );
 }

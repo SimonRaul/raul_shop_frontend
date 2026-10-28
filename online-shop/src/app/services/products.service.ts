@@ -1,7 +1,7 @@
-import { inject, Service, Signal, signal } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Product } from '../features/shared/types/products.types';
+import { CreateProductRequest, Product } from '../features/shared/types/products.types';
 
 @Service()
 export class ProductsService {
@@ -20,11 +20,11 @@ export class ProductsService {
     return this.http.delete<void>(`${this.apiUrl}/${productId}`);
   }
 
-  updateProduct(productId: string, productData: any) {
+  updateProduct(productId: string, productData: CreateProductRequest) {
     return this.http.put<Product>(`${this.apiUrl}/${productId}`, productData);
   }
 
-  createProduct(productData: any) {
+  createProduct(productData: CreateProductRequest) {
     return this.http.post<Product>(`${this.apiUrl}`, productData);
   }
 }

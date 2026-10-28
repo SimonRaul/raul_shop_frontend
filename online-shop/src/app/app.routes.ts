@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { ProductListComponent } from './components/containers/product-list/product-list.component';
 import { authGuard } from './guards/auth-guard';
+import { adminGuard } from './guards/admin-guard';
+import { guestGuard } from './guards/guest-guard';
 
 export const routes: Routes = [
   {
@@ -36,7 +38,7 @@ export const routes: Routes = [
       import('./components/containers/products-form/products-form.component').then(
         (m) => m.ProductsFormComponent,
       ),
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
   },
   {
     path: 'products/new',
@@ -44,7 +46,7 @@ export const routes: Routes = [
       import('./components/containers/products-form/products-form.component').then(
         (m) => m.ProductsFormComponent,
       ),
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
   },
   {
     path: 'profile',
@@ -60,5 +62,10 @@ export const routes: Routes = [
       import('./components/containers/login-form/login-form.component').then(
         (m) => m.LoginFormComponent,
       ),
+    canActivate: [guestGuard],
+  },
+  {
+    path: '**',
+    redirectTo: 'products',
   },
 ];

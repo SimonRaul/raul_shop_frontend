@@ -18,16 +18,23 @@ export class ShoppingCartService {
 
   private loadFromLocalStorage(): void {
     const saved = localStorage.getItem('shopping_cart_data');
-    if (saved) {
-      const parsed = JSON.parse(saved);
+    if (!saved) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(saved) as CartState;
       this.cartState.set({
-        items: parsed.items.map((item: any) => ({
+        items: parsed.items.map((item) => ({
           ...item,
           product: { ...item.product, price: Number(item.product.price) },
         })),
         totalItems: Number(parsed.totalItems),
         totalPrice: Number(parsed.totalPrice),
       });
+    } catch (error) {
+      localStorage.removeItem('shopping_cart_data');
+      console.error('The saved shopping cart was invalid and has been cleared.', error);
     }
   }
 

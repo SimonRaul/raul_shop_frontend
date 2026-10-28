@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { ProductDetailsViewComponent } from '../../presentational/product-details-view/product-details-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { UserRole } from '../../../features/shared/types/users.types';
+import { hasUserRole, UserRole } from '../../../features/shared/types/users.types';
 import { Store } from '@ngrx/store';
-import { ProductActions, ShoppingCartActions } from '../../../features/shared/state/app.actions';
-import { selectProducts } from '../../../features/shared/state/app.reducers';
+import { ProductActions } from '../../../features/shared/state/app.actions';
+import { selectAuth, selectProducts } from '../../../features/shared/state/app.reducers';
+import { ShoppingCartService } from '../../../features/shared/shopping-cart/services/shopping-cart.service';
 
 @Component({
   imports: [ProductDetailsViewComponent],
@@ -14,7 +14,7 @@ import { selectProducts } from '../../../features/shared/state/app.reducers';
   template: ` @if (product(); as p) {
       <app-product-details-view
         [productData]="p"
-        [isAdmin]="isAdmin"
+        [isAdmin]="isAdmin()"
         (addToCartClicked)="onAddToCartClicked()"
         (deleteProductClicked)="onDelete($event)"
         (updateProductClicked)="onUpdate($event)"
@@ -26,11 +26,12 @@ import { selectProducts } from '../../../features/shared/state/app.reducers';
 export class ProductDetailsComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
-  private readonly authService = inject(AuthService);
+  private readonly cartService = inject(ShoppingCartService);
   private readonly router = inject(Router);
-  productsState = this.store.selectSignal(selectProducts);
-  product = computed(() => this.productsState().selectedProduct);
-  isAdmin = this.authService.getRole() === UserRole.ADMIN;
+  private readonly productsState = this.store.selectSignal(selectProducts);
+  private readonly authState = this.store.selectSignal(selectAuth);
+  readonly product = computed(() => this.productsState().selectedProduct);
+  readonly isAdmin = computed(() => hasUserRole(this.authState().user, UserRole.ADMIN));
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -44,15 +45,12 @@ export class ProductDetailsComponent implements OnInit {
     const currentProduct = this.product();
 
     if (currentProduct) {
-      this.store.dispatch(
-        ShoppingCartActions.addToCart({ productId: currentProduct.id, quantity: 1 }),
-      );
+      this.cartService.addToCart(currentProduct);
     }
   }
 
   onDelete(productId: string): void {
     this.store.dispatch(ProductActions.deleteProduct({ productId }));
-    this.router.navigate(['/products']);
   }
 
   onUpdate(productId: string): void {

@@ -1,8 +1,7 @@
 import { User } from '../types/users.types';
 import { Product } from '../types/products.types';
-import { CartItem } from '../types/cart-item.types';
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { AuthActions, CategoryActions, ProductActions, ShoppingCartActions } from './app.actions';
+import { AuthActions, CategoryActions, ProductActions } from './app.actions';
 import { Category } from '../types/product-category.types';
 
 export interface AppState {
@@ -10,6 +9,7 @@ export interface AppState {
     user: User | null;
     token: string | null;
     isLoading: boolean;
+    isInitialized: boolean;
     error: string | null;
   };
   products: {
@@ -23,13 +23,6 @@ export interface AppState {
     isLoading: boolean;
     error: string | null;
   };
-  shoppingCart: {
-    items: CartItem[];
-    totalItems: number;
-    totalPrice: number;
-    isLoading: boolean;
-    error: string | null;
-  };
 }
 
 const initialState: AppState = {
@@ -37,6 +30,7 @@ const initialState: AppState = {
     user: null,
     token: null,
     isLoading: false,
+    isInitialized: false,
     error: null,
   },
   products: {
@@ -50,20 +44,7 @@ const initialState: AppState = {
     isLoading: false,
     error: null,
   },
-  shoppingCart: {
-    items: [],
-    totalItems: 0,
-    totalPrice: 0,
-    isLoading: false,
-    error: null,
-  },
 };
-
-function recalculateCartTotals(items: CartItem[]) {
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  return { items, totalItems, totalPrice: Number(totalPrice.toFixed(2)) };
-}
 
 export const appFeature = createFeature({
   name: 'app',
@@ -74,21 +55,32 @@ export const appFeature = createFeature({
       ...state,
       auth: { ...state.auth, isLoading: true, error: null },
     })),
+    on(AuthActions.validateSession, (state) => ({
+      ...state,
+      auth: { ...state.auth, isLoading: true, error: null },
+    })),
     on(AuthActions.loginSuccess, (state, { user, token }) => ({
       ...state,
-      auth: { ...state.auth, user, token, isLoading: false, error: null },
+      auth: { user, token, isLoading: false, isInitialized: true, error: null },
     })),
     on(AuthActions.loginFailure, (state, { error }) => ({
       ...state,
-      auth: { ...state.auth, isLoading: false, error },
+      auth: {
+        ...state.auth,
+        user: null,
+        token: null,
+        isLoading: false,
+        isInitialized: true,
+        error,
+      },
     })),
     on(AuthActions.logout, AuthActions.sessionInvalid, (state) => ({
       ...state,
-      auth: { user: null, token: null, isLoading: false, error: null },
+      auth: { user: null, token: null, isLoading: false, isInitialized: true, error: null },
     })),
-    on(AuthActions.sessionValid, (state, { user }) => ({
+    on(AuthActions.sessionValid, (state, { user, token }) => ({
       ...state,
-      auth: { ...state.auth, user, isLoading: false },
+      auth: { user, token, isLoading: false, isInitialized: true, error: null },
     })),
 
     on(ProductActions.loadProducts, (state) => ({
@@ -105,11 +97,67 @@ export const appFeature = createFeature({
     })),
     on(ProductActions.loadSingleProduct, (state) => ({
       ...state,
-      products: { ...state.products, isLoading: true, error: null },
+      products: { ...state.products, selectedProduct: null, isLoading: true, error: null },
     })),
     on(ProductActions.loadSingleProductSuccess, (state, { product }) => ({
       ...state,
       products: { ...state.products, selectedProduct: product, isLoading: false },
+    })),
+    on(ProductActions.loadSingleProductFailure, (state, { error }) => ({
+      ...state,
+      products: { ...state.products, selectedProduct: null, isLoading: false, error },
+    })),
+    on(
+      ProductActions.addProduct,
+      ProductActions.updateProduct,
+      ProductActions.deleteProduct,
+      (state) => ({
+        ...state,
+        products: { ...state.products, isLoading: true, error: null },
+      }),
+    ),
+    on(ProductActions.addProductSuccess, (state, { product }) => ({
+      ...state,
+      products: {
+        ...state.products,
+        list: [...state.products.list, product],
+        selectedProduct: product,
+        isLoading: false,
+        error: null,
+      },
+    })),
+    on(ProductActions.updateProductSuccess, (state, { product }) => ({
+      ...state,
+      products: {
+        ...state.products,
+        list: state.products.list.map((item) => (item.id === product.id ? product : item)),
+        selectedProduct: product,
+        isLoading: false,
+        error: null,
+      },
+    })),
+    on(ProductActions.deleteProductSuccess, (state, { productId }) => ({
+      ...state,
+      products: {
+        ...state.products,
+        list: state.products.list.filter((product) => product.id !== productId),
+        selectedProduct: null,
+        isLoading: false,
+        error: null,
+      },
+    })),
+    on(
+      ProductActions.addProductFailure,
+      ProductActions.updateProductFailure,
+      ProductActions.deleteProductFailure,
+      (state, { error }) => ({
+        ...state,
+        products: { ...state.products, isLoading: false, error },
+      }),
+    ),
+    on(ProductActions.clearSelectedProduct, (state) => ({
+      ...state,
+      products: { ...state.products, selectedProduct: null, error: null },
     })),
 
     on(CategoryActions.loadCategories, (state) => ({
@@ -120,48 +168,12 @@ export const appFeature = createFeature({
       ...state,
       categories: { ...state.categories, list: categories, isLoading: false },
     })),
-
-    on(ShoppingCartActions.addToCart, (state, { productId, quantity }) => {
-      const product =
-        state.products.list.find((p) => p.id === productId) || state.products.selectedProduct;
-      if (!product) return state;
-
-      const existingItem = state.shoppingCart.items.find((i) => i.product.id === productId);
-      const newItems = existingItem
-        ? state.shoppingCart.items.map((item) =>
-            item.product.id === productId ? { ...item, quantity: item.quantity + quantity } : item,
-          )
-        : [...state.shoppingCart.items, { product, quantity }];
-
-      return {
-        ...state,
-        shoppingCart: { ...state.shoppingCart, ...recalculateCartTotals(newItems) },
-      };
-    }),
-    on(ShoppingCartActions.removeFromCart, (state, { productId }) => {
-      const newItems = state.shoppingCart.items.filter((i) => i.product.id !== productId);
-      return {
-        ...state,
-        shoppingCart: { ...state.shoppingCart, ...recalculateCartTotals(newItems) },
-      };
-    }),
-    on(ShoppingCartActions.clearCart, ShoppingCartActions.checkoutSuccess, (state) => ({
+    on(CategoryActions.loadCategoriesFailure, (state, { error }) => ({
       ...state,
-      shoppingCart: { items: [], totalItems: 0, totalPrice: 0, isLoading: false, error: null },
-    })),
-    on(ShoppingCartActions.checkout, (state) => ({
-      ...state,
-      shoppingCart: { ...state.shoppingCart, isLoading: true, error: null },
+      categories: { ...state.categories, isLoading: false, error },
     })),
   ),
 });
 
-export const {
-  name,
-  reducer,
-  selectAppState,
-  selectAuth,
-  selectProducts,
-  selectCategories,
-  selectShoppingCart,
-} = appFeature;
+export const { name, reducer, selectAppState, selectAuth, selectProducts, selectCategories } =
+  appFeature;

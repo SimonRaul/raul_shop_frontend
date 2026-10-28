@@ -3,9 +3,9 @@ import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-deta
 import { Address } from '../../../../types/address.types';
 import { Checkout } from '../../../../types/checkout.types';
 import { Router } from '@angular/router';
+import { ShoppingCartService } from '../../../services/shopping-cart.service';
+import { selectAuth } from '../../../../state/app.reducers';
 import { Store } from '@ngrx/store';
-import { selectAuth, selectShoppingCart } from '../../../../state/app.reducers';
-import { ShoppingCartActions } from '../../../../state/app.actions';
 
 @Component({
   imports: [ShoppingCartDetailsView],
@@ -13,9 +13,9 @@ import { ShoppingCartActions } from '../../../../state/app.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-shopping-cart-details-view
-      [totalPrice]="totalPrice()"
-      [totalItems]="totalItems()"
-      [items]="cartItems()"
+      [totalPrice]="cartState().totalPrice"
+      [totalItems]="cartState().totalItems"
+      [items]="cartState().items"
       (checkoutClicked)="onCheckout($event)"
       (quantityChanged)="onQuantityChange($event)"
       (itemRemoved)="onItemRemoved($event)"
@@ -23,39 +23,31 @@ import { ShoppingCartActions } from '../../../../state/app.actions';
   `,
 })
 export class ShoppingCartDetailsComponent {
-  private store = inject(Store);
-  private cartState = this.store.selectSignal(selectShoppingCart);
-  private authState = this.store.selectSignal(selectAuth);
-  currentUser = computed(() => this.authState().user);
+  private readonly shoppingCartService = inject(ShoppingCartService);
   private readonly router = inject(Router);
-  totalPrice = computed(() => this.cartState().totalPrice);
-  totalItems = computed(() => this.cartState().totalItems);
-  cartItems = computed(() => this.cartState().items);
+  private readonly store = inject(Store);
+  private readonly authState = this.store.selectSignal(selectAuth);
+  cartState = this.shoppingCartService.getCartState();
+  currentUser = computed(() => this.authState().user);
 
   onQuantityChange(event: { productId: string; rawValue: string }): void {
-    this.store.dispatch(
-      ShoppingCartActions.updateQuantity({
-        productId: event.productId,
-        newQuantity: Number(event.rawValue),
-      }),
-    );
+    this.shoppingCartService.updateItemQuantity(event.productId, event.rawValue);
   }
 
   onItemRemoved(productId: string): void {
-    this.store.dispatch(ShoppingCartActions.removeFromCart({ productId }));
+    this.shoppingCartService.removeItem(productId);
   }
-
   onCheckout(address: Address): void {
     const user = this.currentUser();
 
     if (!user) {
-      console.error('Cannot checkout: User is not authenticated.');
+      this.router.navigate(['/login']);
       return;
     }
 
     const checkoutData: Checkout = {
       deliveryAddress: address,
-      products: this.cartItems().map((item) => ({
+      products: this.cartState().items.map((item) => ({
         productId: item.product.id,
         quantity: item.quantity,
       })),
@@ -63,6 +55,14 @@ export class ShoppingCartDetailsComponent {
       createdAt: new Date(),
     };
 
-    this.store.dispatch(ShoppingCartActions.checkout({ checkoutData }));
+    this.shoppingCartService.createOrder(checkoutData).subscribe({
+      next: () => {
+        this.shoppingCartService.clearCart();
+        this.router.navigate(['/products']);
+      },
+      error: (err) => {
+        console.error('Error at sending order:', err);
+      },
+    });
   }
 }

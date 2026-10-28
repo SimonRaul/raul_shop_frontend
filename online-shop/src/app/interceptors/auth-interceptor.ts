@@ -1,18 +1,16 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 import { catchError, throwError } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AuthActions } from '../features/shared/state/app.actions';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
-  const authService = inject(AuthService);
+  const store = inject(Store);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        authService.logout();
-        router.navigate(['/login']);
+        store.dispatch(AuthActions.logout());
       }
       return throwError(() => error);
     }),

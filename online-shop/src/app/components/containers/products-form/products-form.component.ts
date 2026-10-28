@@ -32,6 +32,8 @@ export class ProductsFormComponent implements OnInit {
 
     if (productId) {
       this.store.dispatch(ProductActions.loadSingleProduct({ productId: productId }));
+    } else {
+      this.store.dispatch(ProductActions.clearSelectedProduct());
     }
   }
 

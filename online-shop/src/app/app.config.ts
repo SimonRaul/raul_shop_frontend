@@ -15,8 +15,8 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, tokenInterceptor])),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideStore({ [appFeature.name]: appFeature.reducer }),
     provideEffects([AppEffects]),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), name: 'SolarVest-App' }),
   ],
 };

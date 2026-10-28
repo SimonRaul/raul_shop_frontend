@@ -1,29 +1,37 @@
-import { inject, signal, computed } from '@angular/core';
+import { inject } from '@angular/core';
 import { Service } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { User, USER_ROLES, UserLoginRequest, UserRole } from '../features/shared/types/users.types';
+import { User, UserLoginRequest } from '../features/shared/types/users.types';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, map, Observable, switchMap, tap, throwError } from 'rxjs';
+
+export interface AuthSession {
+  user: User;
+  token: string;
+}
 
 @Service()
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl + '/auth';
-  private readonly _currentUser = signal<User | null>(null);
-  public readonly currentUser = this._currentUser.asReadonly();
-  public readonly isLoggedIn = computed(() => this._currentUser() !== null);
 
-  login(request: UserLoginRequest): Observable<User> {
+  login(request: UserLoginRequest): Observable<AuthSession> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, request).pipe(
       tap((response) => this.setToken(response.token)),
-      switchMap(() => this.http.get<User>(`${this.apiUrl}/me`)),
-      tap((user) => this._currentUser.set(user)),
+      switchMap((response) =>
+        this.http
+          .get<User>(`${this.apiUrl}/me`)
+          .pipe(map((user) => ({ user, token: response.token }))),
+      ),
+      catchError((error) => {
+        this.logout();
+        return throwError(() => error);
+      }),
     );
   }
 
   logout(): void {
     localStorage.removeItem('auth_token');
-    this._currentUser.set(null);
   }
 
   getToken(): string | null {
@@ -55,28 +63,12 @@ export class AuthService {
     }
   }
 
-  getRole(): UserRole | null {
-    const token = this.getToken();
-    const payload = this.decodeToken(token);
-
-    if (!payload?.['role']) {
-      return null;
-    }
-
-    const role = payload['role'].replace(/^ROLE_/, '') as UserRole;
-    return USER_ROLES.includes(role) ? role : null;
-  }
-
-  hasRole(role: UserRole): boolean {
-    return this.getRole() === role;
-  }
-
   isTokenExpired(): boolean {
     const token = this.getToken();
     const payload = this.decodeToken(token);
 
     if (!payload?.['exp']) {
-      return false;
+      return true;
     }
 
     const expirationTime = payload['exp'] * 1000;
@@ -93,16 +85,7 @@ export class AuthService {
     return !this.isTokenExpired();
   }
 
-  validateSession(): Observable<boolean> {
-    return this.http.get<User>(`${this.apiUrl}/me`).pipe(
-      tap((user) => {
-        this._currentUser.set(user);
-      }),
-      map(() => true),
-      catchError(() => {
-        this.logout();
-        return of(false);
-      }),
-    );
+  validateSession(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`);
   }
 }

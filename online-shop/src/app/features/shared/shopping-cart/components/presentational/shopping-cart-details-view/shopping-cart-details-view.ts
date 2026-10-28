@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CartItem } from '../../../../types/cart-item.types';
-import { ShoppingCartService } from '../../../services/shopping-cart.service';
 import { FormsModule } from '@angular/forms';
 import { Address } from '../../../../types/address.types';
 
