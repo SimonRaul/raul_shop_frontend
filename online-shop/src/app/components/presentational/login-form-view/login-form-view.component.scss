@@ -1,132 +1,61 @@
-/* Centrarea întregii pagini de login pe ecran */
 :host {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh; /* Păstrează formularul pe mijlocul ecranului */
+  min-height: 80vh;
   padding: 1rem;
 }
 
-.page-header {
-  margin-bottom: 2rem;
-  text-align: center;
+mat-card {
+  width: 100%;
+  max-width: 450px;
+}
 
-  h1 {
+mat-card-header {
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+
+  mat-card-title {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     font-size: 2rem;
-    color: var(--text-main);
-    margin: 0;
     letter-spacing: -0.025em;
+    font-weight: 600;
   }
 }
 
-/* Containerul principal de tip "Card" */
 .login-form {
-  width: 100%;
-  max-width: 450px; /* Un pic mai îngust decât formularul de produse, perfect pt login */
-  background-color: var(--bg-surface);
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1.5rem;
-  }
-
-  label {
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-main);
-  }
-
-  input[type='text'],
-  input[type='password'] {
+  mat-form-field {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background-color: var(--bg-surface);
-    color: var(--text-main);
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition:
-      border-color 0.2s ease,
-      box-shadow 0.2s ease;
-
-    &:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.15);
-    }
-
-    &::placeholder {
-      color: #9ca3af;
-    }
-
-    &:hover:not(:focus) {
-      border-color: #b5c0b8;
-    }
   }
+}
 
-  .error-message {
-    color: var(--danger-color);
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-    font-weight: 500;
-    line-height: 1.4;
-  }
+.global-error {
+  background-color: rgba(184, 18, 18, 0.1);
+  color: var(--danger-color);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(184, 18, 18, 0.2);
+  margin-bottom: 1rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-align: center;
+}
 
-  .global-error {
-    background-color: rgba(184, 18, 18, 0.1);
-    color: var(--danger-color);
-    padding: 0.75rem 1rem;
-    border-radius: 6px;
-    border: 1px solid rgba(184, 18, 18, 0.2);
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-    font-size: 0.9rem;
-    text-align: center;
-  }
+.form-actions {
+  margin-top: 0.5rem;
 
-  button[type='submit'] {
-    display: block;
+  button {
     width: 100%;
-    padding: 0.875rem;
-    margin-top: 1rem;
-    background-color: var(--primary-color);
-    color: var(--button-text);
-    border: none;
-    border-radius: 6px;
+    min-height: 48px;
     font-size: 1rem;
     font-weight: 600;
-    cursor: pointer;
-    transition:
-      background-color 0.2s ease,
-      transform 0.1s ease,
-      opacity 0.2s ease;
-
-    &:hover:not(:disabled) {
-      background-color: var(--primary-hover);
-    }
-
-    &:active:not(:disabled) {
-      transform: translateY(1px);
-    }
-
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.3);
-    }
-
-    &:disabled {
-      background-color: #a3b8aa;
-      cursor: not-allowed;
-      opacity: 0.7;
-    }
   }
 }
 
@@ -134,10 +63,5 @@
   :host {
     justify-content: flex-start;
     padding-top: 3rem;
-  }
-
-  .login-form {
-    padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 }

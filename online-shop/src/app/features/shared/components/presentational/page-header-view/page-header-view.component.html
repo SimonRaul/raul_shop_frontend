@@ -1,29 +1,27 @@
-<nav class="navbar">
-  <div class="navbar-brand">
-    <a routerLink="/" class="logo">MyStore</a>
-  </div>
+<mat-toolbar>
+  <a routerLink="/" class="logo">MyStore</a>
 
-  <div class="navbar-menu">
-    @if (isLoggedIn()) {
-      <ul class="nav-links">
-        <li><a routerLink="/products" routerLinkActive="active">Products</a></li>
-        <li><a routerLink="/shopping-cart" routerLinkActive="active">Shopping Cart</a></li>
-      </ul>
-    }
-
-    <div class="auth-actions">
-      @if (isLoggedIn()) {
-        <button class="btn-profile" routerLink="/profile">
-          <span class="avatar">
-            {{ currentUser()?.firstName?.charAt(0) | uppercase }}
-          </span>
-          <span class="username">{{ currentUser()?.firstName }}</span>
-        </button>
-
-        <button class="btn-logout" (click)="logoutClicked.emit()">Logout</button>
-      } @else {
-        <button class="btn-login" routerLink="/login">Login</button>
-      }
+  @if (isLoggedIn()) {
+    <div class="nav-links">
+      <a mat-button routerLink="/products" routerLinkActive="active-link">Products</a>
+      <a mat-button routerLink="/shopping-cart" routerLinkActive="active-link">Shopping Cart</a>
     </div>
+  }
+
+  <span class="spacer"></span>
+
+  <div class="auth-actions">
+    @if (isLoggedIn()) {
+      <button mat-button routerLink="/profile" class="profile-btn">
+        <span class="avatar">
+          {{ currentUser()?.firstName?.charAt(0) | uppercase }}
+        </span>
+        <span class="username">{{ currentUser()?.firstName }}</span>
+      </button>
+
+      <button mat-button (click)="logoutClicked.emit()">Logout</button>
+    } @else {
+      <button mat-flat-button color="primary" routerLink="/login">Login</button>
+    }
   </div>
-</nav>
+</mat-toolbar>

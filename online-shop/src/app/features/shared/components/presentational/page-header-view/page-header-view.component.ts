@@ -2,9 +2,11 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { User } from '../../../types/users.types';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UpperCasePipe } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  imports: [RouterLink, RouterLinkActive, UpperCasePipe],
+  imports: [RouterLink, RouterLinkActive, UpperCasePipe, MatToolbarModule, MatButtonModule],
   selector: 'app-page-header-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './page-header-view.component.scss',

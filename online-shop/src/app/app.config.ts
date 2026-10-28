@@ -5,7 +5,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/auth-interceptor';
 import { tokenInterceptor } from './interceptors/token-interceptor';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { provideStore } from '@ngrx/store';
+import { provideState, provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { AppEffects } from './features/shared/state/app.effects';
 import { appFeature } from './features/shared/state/app.reducers';
@@ -15,7 +15,8 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, tokenInterceptor])),
-    provideStore({ [appFeature.name]: appFeature.reducer }),
+    provideStore(),
+    provideState(appFeature),
     provideEffects([AppEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), name: 'SolarVest-App' }),
   ],

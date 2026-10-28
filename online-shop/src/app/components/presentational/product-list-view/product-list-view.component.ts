@@ -1,17 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  input,
-  Input,
-  output,
-  Output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Product } from '../../../features/shared/types/products.types';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
-  imports: [],
+  imports: [MatButtonModule, MatTableModule],
   selector: 'app-product-list-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './product-list-view.component.scss',
@@ -22,4 +15,5 @@ export class ProductListViewComponent {
   productClicked = output<string>();
   addProductClicked = output<void>();
   isAdmin = input.required<boolean>();
+  displayedColumns: string[] = ['image', 'name', 'price', 'actions'];
 }

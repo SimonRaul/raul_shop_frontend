@@ -3,34 +3,40 @@
 
   @if (isAdmin()) {
     <div class="page-action">
-      <button class="btn-add" (click)="addProductClicked.emit()">Add Product</button>
+      <button mat-flat-button (click)="addProductClicked.emit()">Add Product</button>
     </div>
   }
 </div>
 
-<div class="table-container">
-  <table class="product-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (product of products(); track product.id) {
-        <tr>
-          <td><img [src]="product.imageUrl" alt="{{ product.name }}" width="50" height="50" /></td>
-          <td>{{ product.name }}</td>
-          <td>{{ product.price }}</td>
-          <td>
-            <button class="btn btn-primary" (click)="productClicked.emit(product.id)">
-              View Details
-            </button>
-          </td>
-        </tr>
-      }
-    </tbody>
+<div class="table-container mat-elevation-z8">
+  <table mat-table [dataSource]="products()" class="products-table">
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let product">
+        <img [src]="product.imageUrl" [alt]="product.name" class="product-thumb" />
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef>Price</th>
+      <td mat-cell *matCellDef="let product">{{ product.price }} RON</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let product">
+        <button mat-flat-button color="primary" (click)="productClicked.emit(product.id)">
+          View Details
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 </div>

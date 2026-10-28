@@ -1,15 +1,17 @@
 @if (productData(); as product) {
-  <div class="product-details-container">
-    <div class="product-image">
-      <img [src]="product.imageUrl" [alt]="product.name" />
-    </div>
-
-    <div class="product-info">
-      <div class="item-title-price">
-        <h1>{{ product.name }}</h1>
-        <h2>Price: {{ product.price }} RON</h2>
+  <mat-card class="product-details-card">
+    <mat-card-header>
+      <div class="product-image">
+        <img [src]="product.imageUrl" [alt]="product.name" />
       </div>
 
+      <mat-card-title-group>
+        <mat-card-title>{{ product.name }}</mat-card-title>
+        <mat-card-subtitle>Price: {{ product.price }} RON</mat-card-subtitle>
+      </mat-card-title-group>
+    </mat-card-header>
+
+    <mat-card-content>
       <div class="item-category">
         <h3>Category: {{ product.category }}</h3>
         <p>{{ product.categoryDescription }}</p>
@@ -22,19 +24,24 @@
       <div class="item-weight">
         <p>Weight: {{ product.weight }} kg</p>
       </div>
-      <div class="product-actions">
-        @if (isAdmin()) {
-          <button class="btn-edit" (click)="updateProductClicked.emit(product.id)">
-            Edit Product
-          </button>
-          <button class="btn-delete" (click)="deleteProductClicked.emit(product.id)">
-            Delete Product
-          </button>
-        }
-        <button class="btn-add-to-cart" (click)="addToCartClicked.emit(product)">
-          Add to Cart
+    </mat-card-content>
+
+    <mat-card-actions class="product-actions">
+      @if (isAdmin()) {
+        <button mat-stroked-button color="primary" (click)="updateProductClicked.emit(product.id)">
+          Edit
         </button>
-      </div>
-    </div>
-  </div>
+        <button
+          mat-stroked-button
+          class="btn-delete-mat"
+          (click)="deleteProductClicked.emit(product.id)"
+        >
+          Delete
+        </button>
+      }
+      <button mat-flat-button color="primary" (click)="addToCartClicked.emit(product)">
+        Add to Cart
+      </button>
+    </mat-card-actions>
+  </mat-card>
 }
