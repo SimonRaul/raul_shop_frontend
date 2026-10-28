@@ -9,7 +9,6 @@ export const routes: Routes = [
     path: '',
     redirectTo: 'products',
     pathMatch: 'full',
-    canActivate: [authGuard],
   },
   {
     path: 'product/:id',

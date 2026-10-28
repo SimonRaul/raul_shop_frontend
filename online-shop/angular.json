@@ -59,7 +59,7 @@
               ]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
@@ -71,7 +71,7 @@
               "buildTarget": "online-shop:build:development"
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "test": {
           "builder": "@angular/build:unit-test"
