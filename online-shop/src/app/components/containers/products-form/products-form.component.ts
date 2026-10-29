@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { ProductsFormViewComponent } from '../../presentational/products-form-view/products-form-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateProductRequest } from '../../../features/shared/types/products.types';
@@ -25,6 +32,7 @@ export class ProductsFormComponent implements OnInit {
   private readonly productsState = this.store.selectSignal(selectProducts);
   categoriesList = computed(() => this.categoriesState().list);
   productToEdit = computed(() => this.productsState().selectedProduct);
+  isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
     this.store.dispatch(CategoryActions.loadCategories());
@@ -38,15 +46,17 @@ export class ProductsFormComponent implements OnInit {
   }
 
   onFormSubmitted(formData: CreateProductRequest): void {
+    this.isLoading.set(true);
     const currentProduct = this.productToEdit();
 
-    if (currentProduct && currentProduct.id) {
+    if (currentProduct?.id) {
       this.store.dispatch(
         ProductActions.updateProduct({ productId: currentProduct.id, productData: formData }),
       );
     } else {
       this.store.dispatch(ProductActions.addProduct({ product: formData }));
     }
+    this.isLoading.set(false);
   }
 
   onCancel(): void {

@@ -3,16 +3,21 @@
     <div class="page-title">
       <h1>Your Cart</h1>
     </div>
+
     <div class="cart-container">
-      <div class="cart-items">
+      <div class="cart-items-list">
         @for (item of items(); track item.product.id) {
-          <div class="cart-item">
-            <div class="item-image">
-              <img [src]="item.product.imageUrl" [alt]="item.product.name" />
-            </div>
-            <div class="item-details">
-              <h3>{{ item.product.name }}</h3>
-              <p class="price">Price: {{ item.product.price }} RON</p>
+          <mat-card class="cart-item-card">
+            <mat-card-content class="cart-item-content">
+              <div class="item-image">
+                <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+              </div>
+
+              <div class="item-details">
+                <span class="item-name">{{ item.product.name }}</span>
+                <span class="item-price">Price: {{ item.product.price }} RON</span>
+              </div>
+
               <div class="item-actions">
                 <div class="quantity-control">
                   <label for="qty-{{ item.product.id }}">Quantity:</label>
@@ -20,52 +25,51 @@
                     id="qty-{{ item.product.id }}"
                     #qtyInput
                     type="number"
+                    class="qty-input"
                     [value]="item.quantity"
                     min="1"
-                    class="qty-input"
                     (change)="
                       quantityChanged.emit({ productId: item.product.id, rawValue: qtyInput.value })
                     "
                   />
                 </div>
-                <button class="btn-delete" (click)="itemRemoved.emit(item.product.id)">
+                <button mat-stroked-button color="warn" (click)="itemRemoved.emit(item.product.id)">
                   Delete
                 </button>
               </div>
-            </div>
-          </div>
+            </mat-card-content>
+          </mat-card>
         }
       </div>
-      <div class="order-summary">
-        <h3>Order Summary</h3>
-        <div class="summary-row">
-          <span>Total Items:</span>
-          <span>{{ totalItems() }}</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total Price:</span>
-          <span>{{ totalPrice() }} RON</span>
-        </div>
-        <input
-          type="text"
-          placeholder="Enter your country"
-          [(ngModel)]="country"
-          class="address-input"
-        />
-        <input type="text" placeholder="Enter your city" [(ngModel)]="city" class="address-input" />
-        <input
-          type="text"
-          placeholder="Enter your county"
-          [(ngModel)]="county"
-          class="address-input"
-        />
-        <input
-          type="text"
-          placeholder="Enter your street address"
-          [(ngModel)]="streetAddress"
-          class="address-input"
-        />
-        <button class="btn-checkout" (click)="onCheckout()">Proceed to Checkout</button>
+
+      <div class="summary-wrapper">
+        <mat-card class="order-summary-card">
+          <mat-card-header>
+            <mat-card-title>Order Summary</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="summary-row">
+              <span>Total Items:</span>
+              <span>{{ totalItems() }}</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total Price:</span>
+              <span>{{ totalPrice() }} RON</span>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              mat-flat-button
+              color="primary"
+              class="full-width-btn"
+              (click)="checkoutClicked.emit()"
+            >
+              Checkout
+            </button>
+          </mat-card-actions>
+        </mat-card>
       </div>
     </div>
   } @else {

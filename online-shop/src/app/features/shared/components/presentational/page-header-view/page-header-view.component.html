@@ -4,24 +4,28 @@
   @if (isLoggedIn()) {
     <div class="nav-links">
       <a mat-button routerLink="/products" routerLinkActive="active-link">Products</a>
-      <a mat-button routerLink="/shopping-cart" routerLinkActive="active-link">Shopping Cart</a>
     </div>
   }
 
   <span class="spacer"></span>
 
   <div class="auth-actions">
+    <a mat-icon-button routerLink="/shopping-cart" routerLinkActive="active-link">
+      <mat-icon>shopping_cart</mat-icon>
+    </a>
     @if (isLoggedIn()) {
       <button mat-button routerLink="/profile" class="profile-btn">
-        <span class="avatar">
-          {{ currentUser()?.firstName?.charAt(0) | uppercase }}
-        </span>
         <span class="username">{{ currentUser()?.firstName }}</span>
+        <mat-icon>account_circle</mat-icon>
       </button>
 
-      <button mat-button (click)="logoutClicked.emit()">Logout</button>
+      <button mat-icon-button (click)="logoutClicked.emit()">
+        <mat-icon>logout</mat-icon>
+      </button>
     } @else {
-      <button mat-flat-button color="primary" routerLink="/login">Login</button>
+      <button mat-icon-button routerLink="/login">
+        <mat-icon>login</mat-icon>
+      </button>
     }
   </div>
 </mat-toolbar>

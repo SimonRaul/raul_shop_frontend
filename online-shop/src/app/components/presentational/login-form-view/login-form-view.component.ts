@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserLoginRequest } from '../../../features/shared/types/users.types';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule,
   ],
   selector: 'app-login-form-view',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './login-form-view.component.scss',
   templateUrl: './login-form-view.component.html',
 })
@@ -27,7 +28,7 @@ export class LoginFormViewComponent {
     username: ['', [Validators.required]],
     password: [
       '',
-      [Validators.required, Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')],
+      [Validators.required, Validators.pattern(String.raw`^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$`)],
     ],
   });
 

@@ -20,7 +20,6 @@
   margin: 0;
   letter-spacing: -0.025em;
   text-align: center;
-  padding-left: 10rem;
   flex: 1;
 }
 
@@ -79,6 +78,7 @@
 @media (max-width: 576px) {
   :host {
     padding: 1rem;
+    justify-content: center;
   }
 
   .page-header {
@@ -93,5 +93,31 @@
 
   .page-action button {
     width: 100%;
+  }
+
+  .products-table {
+    min-width: 100%;
+
+    th.mat-mdc-header-cell,
+    td.mat-mdc-cell {
+      padding: 0 0.5rem;
+    }
+
+    .mat-column-image {
+      padding-left: 0.5rem;
+      width: 60px;
+    }
+
+    .mat-column-actions {
+      padding-right: 0.5rem;
+    }
+
+    button {
+      height: 32px;
+      line-height: 32px;
+      padding: 0 0.75rem;
+      font-size: 0.8rem;
+      min-width: unset;
+    }
   }
 }

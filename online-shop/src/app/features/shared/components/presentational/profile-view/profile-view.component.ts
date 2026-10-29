@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { User } from '../../../types/users.types';
 import { UpperCasePipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatError } from '@angular/material/input';
 
 @Component({
-  imports: [UpperCasePipe],
+  imports: [UpperCasePipe, MatCardModule, MatProgressSpinnerModule, MatError],
   selector: 'app-profile-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './profile-view.component.scss',
@@ -11,4 +14,5 @@ import { UpperCasePipe } from '@angular/common';
 })
 export class ProfileViewComponent {
   currentUser = input.required<User | null>();
+  isLoading = input<boolean>(false);
 }

@@ -32,6 +32,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'checkout',
+    loadComponent: () =>
+      import('./features/shared/components/containers/checkout-page/checkout-page.component').then(
+        (m) => m.CheckoutPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'products/:id/edit',
     loadComponent: () =>
       import('./components/containers/products-form/products-form.component').then(

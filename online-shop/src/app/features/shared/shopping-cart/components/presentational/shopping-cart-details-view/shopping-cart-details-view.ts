@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CartItem } from '../../../../types/cart-item.types';
 import { FormsModule } from '@angular/forms';
-import { Address } from '../../../../types/address.types';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  imports: [FormsModule],
+  imports: [FormsModule, MatCardModule, MatInputModule, MatButtonModule],
   selector: 'app-shopping-cart-details-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './shopping-cart-details-view.scss',
@@ -15,29 +17,7 @@ export class ShoppingCartDetailsView {
   totalItems = input.required<number>();
   items = input.required<CartItem[]>();
 
-  country = '';
-  city = '';
-  county = '';
-  streetAddress = '';
-
   quantityChanged = output<{ productId: string; rawValue: string }>();
   itemRemoved = output<string>();
-  checkoutClicked = output<Address>();
-
-  onCheckout(): void {
-    if (
-      this.country.trim() &&
-      this.city.trim() &&
-      this.county.trim() &&
-      this.streetAddress.trim()
-    ) {
-      const address: Address = {
-        country: this.country,
-        city: this.city,
-        county: this.county,
-        streetAddress: this.streetAddress,
-      };
-      this.checkoutClicked.emit(address);
-    }
-  }
+  checkoutClicked = output<void>();
 }

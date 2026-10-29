@@ -1,90 +1,66 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
-html {
-  height: 100%;
-  color-scheme: light dark;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
-}
+@include mat.core();
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
+$mystore-primary-palette: (
+  50: #e4f6f2,
+  100: #bce9df,
+  200: #8fdaca,
+  300: #62cbb4,
+  400: #42c0a3,
+  500: #21b593,
+  600: #1dae8b,
+  700: #18a580,
+  800: #149c76,
+  900: #0b8c64,
+  A100: #a7ffd6,
+  A200: #74ffbc,
+  A400: #41ffa3,
+  A700: #28ff96,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: rgba(0, 0, 0, 0.87),
+  ),
+);
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+$mystore-primary: mat.m2-define-palette($mystore-primary-palette, 500);
+$mystore-accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
+$mystore-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-  // Reset the user agent margin.
-  margin: 0;
-  height: 100%;
-}
-/* You can add global styles to this file, and also import other style files */
+$mystore-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $mystore-primary,
+      accent: $mystore-accent,
+      warn: $mystore-warn,
+    ),
+    typography: mat.m2-define-typography-config(),
+    density: 0,
+  )
+);
+
+@include mat.all-component-themes($mystore-theme);
+
 :root {
-  --primary-color: #4a7c59;
-  --primary-hover: #5a8f6a;
-  --secondary-color: #007bb5;
-  --secondary-hover: #008cba;
+  --primary-color: #{mat.m2-get-color-from-palette($mystore-primary, 500)};
+  --primary-hover: #{mat.m2-get-color-from-palette($mystore-primary, 600)};
+  --danger-color: #{mat.m2-get-color-from-palette($mystore-warn, 500)};
+  --danger-hover: #{mat.m2-get-color-from-palette($mystore-warn, 600)};
+  --button-text: white;
   --bg-surface: #ffffff;
-  --bg-body: #fffdf2;
-  --border-color: #dde2de;
-  --text-main: #2d3748;
-  --button-text: #ffffff;
-  --danger-color: #b81212;
-  --danger-hover: #ff0000;
-  --font-primary: 'Inter', sans-serif;
-  --font-heading: 'Montserrat', sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background-color: var(--bg-body);
-  font-family: var(--font-primary);
-  color: var(--text-main);
-  line-height: 1.6;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--text-main);
-}
-
-input,
-textarea,
-select,
-button {
-  font-family: inherit;
+  --text-main: #{mat.m2-get-color-from-palette($mystore-primary, 900)};
+  --border-color: #e5e7eb;
+  background: #e5e4e2;
 }

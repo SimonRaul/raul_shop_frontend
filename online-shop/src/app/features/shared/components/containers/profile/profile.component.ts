@@ -7,10 +7,14 @@ import { selectAuth } from '../../../state/app.reducers';
   imports: [ProfileViewComponent],
   selector: 'app-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<app-profile-view [currentUser]="currentUser()"></app-profile-view>`,
+  template: `<app-profile-view
+    [currentUser]="currentUser()"
+    [isLoading]="isLoading()"
+  ></app-profile-view>`,
 })
 export class ProfileComponent {
-  private store = inject(Store);
-  private authState = this.store.selectSignal(selectAuth);
+  private readonly store = inject(Store);
+  private readonly authState = this.store.selectSignal(selectAuth);
   currentUser = computed(() => this.authState().user);
+  isLoading = computed(() => this.authState().isLoading);
 }
