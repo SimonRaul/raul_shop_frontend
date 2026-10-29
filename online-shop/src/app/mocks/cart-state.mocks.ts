@@ -1,4 +1,3 @@
-import Decimal from 'decimal.js';
 import { mockCartItems } from './cart-item.mocks';
 import { CartState } from '../features/shared/types/cart-state.types';
 

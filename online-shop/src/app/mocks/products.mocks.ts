@@ -1,4 +1,3 @@
-import { Decimal } from 'decimal.js';
 import { Product } from '../features/shared/types/products.types';
 
 export const createMockProduct = (overrides?: Partial<Product>): Product => ({
