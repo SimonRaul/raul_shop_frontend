@@ -48,6 +48,21 @@ describe('ProductsFormViewComponent', () => {
     expect(submitted).not.toHaveBeenCalled();
   });
 
+  it('rejects negative prices and weights', () => {
+    component.productForm.patchValue({
+      name: 'Desk',
+      description: 'A wooden desk',
+      price: -1,
+      weight: -1,
+      categoryId: 'category-1',
+      imageUrl: 'https://example.com/desk.jpg',
+    });
+
+    expect(component.productForm.get('price')?.hasError('min')).toBe(true);
+    expect(component.productForm.get('weight')?.hasError('min')).toBe(true);
+    expect(component.productForm.invalid).toBe(true);
+  });
+
   it('emits the form value when submitting a valid form', () => {
     const submitted = vi.fn();
     component.formSubmitted.subscribe(submitted);
@@ -84,6 +99,15 @@ describe('ProductsFormViewComponent', () => {
 
   it('does not set a category when the edit category has no match', async () => {
     fixture.componentRef.setInput('initialData', { ...product, category: 'Unknown' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.productForm.get('categoryId')?.value).toBe('');
+  });
+
+  it('keeps the category empty when editing without categories', async () => {
+    fixture.componentRef.setInput('categories', []);
+    fixture.componentRef.setInput('initialData', product);
     fixture.detectChanges();
     await fixture.whenStable();
 

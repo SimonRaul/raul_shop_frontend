@@ -58,7 +58,7 @@
           }
         </mat-form-field>
         <div class="form-actions">
-          <button mat-flat-button type="submit" [disabled]="checkoutForm.invalid">
+          <button mat-flat-button color="primary" type="submit" [disabled]="checkoutForm.invalid">
             @if (isLoading()) {
               <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
             } @else {
@@ -78,7 +78,9 @@
       <p>Your order has been placed successfully!</p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-flat-button (click)="continueShoppingClicked.emit()">Continue Shopping</button>
+      <button mat-flat-button color="primary" (click)="continueShoppingClicked.emit()">
+        Continue Shopping
+      </button>
     </mat-card-actions>
   </mat-card>
 }

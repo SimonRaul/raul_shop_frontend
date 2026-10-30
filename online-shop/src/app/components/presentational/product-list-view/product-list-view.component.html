@@ -3,7 +3,9 @@
 
   @if (isAdmin()) {
     <div class="page-action">
-      <button mat-flat-button (click)="addProductClicked.emit()">Add Product</button>
+      <button mat-flat-button color="primary" (click)="addProductClicked.emit()">
+        Add Product
+      </button>
     </div>
   }
 </div>

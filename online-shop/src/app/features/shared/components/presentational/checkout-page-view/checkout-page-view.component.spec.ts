@@ -12,10 +12,52 @@ describe('CheckoutPageViewComponent', () => {
 
     fixture = TestBed.createComponent(CheckoutPageViewComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('isCheckedOut', false);
+    fixture.componentRef.setInput('isLoading', false);
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('emits the entered address when the form is valid', () => {
+    const checkout = vi.fn();
+    component.checkoutClicked.subscribe(checkout);
+    component.checkoutForm.setValue({
+      country: 'Romania',
+      city: 'Cluj-Napoca',
+      county: 'Cluj',
+      streetAddress: '1 Main Street',
+    });
+
+    component.onCheckout();
+
+    expect(checkout).toHaveBeenCalledWith({
+      country: 'Romania',
+      city: 'Cluj-Napoca',
+      county: 'Cluj',
+      streetAddress: '1 Main Street',
+    });
+  });
+
+  it('marks an invalid form as touched without emitting', () => {
+    const checkout = vi.fn();
+    component.checkoutClicked.subscribe(checkout);
+
+    component.onCheckout();
+
+    expect(checkout).not.toHaveBeenCalled();
+    expect(component.checkoutForm.controls.country.touched).toBe(true);
+    expect(component.checkoutForm.controls.streetAddress.touched).toBe(true);
+  });
+
+  it('renders the success state and emits when continuing shopping', () => {
+    const continueShopping = vi.fn();
+    component.continueShoppingClicked.subscribe(continueShopping);
+    fixture.componentRef.setInput('isCheckedOut', true);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Checkout Successful');
+    (fixture.nativeElement.querySelector('button') as HTMLButtonElement).click();
+
+    expect(continueShopping).toHaveBeenCalled();
   });
 });
