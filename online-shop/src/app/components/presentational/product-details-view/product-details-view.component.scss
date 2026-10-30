@@ -41,18 +41,18 @@ mat-card-title-group {
 
 mat-card-title {
   justify-content: flex-start;
-  font-size: 2.2rem !important;
-  color: var(--text-main) !important;
+  font-size: 2.2rem;
+  color: var(--text-main);
   white-space: normal;
-  line-height: 1.2 !important;
-  margin: 0 !important;
+  line-height: 1.2;
+  margin: 0;
 }
 
 mat-card-subtitle {
-  font-size: 1.5rem !important;
-  color: var(--primary-color) !important;
-  font-weight: 600 !important;
-  margin: 0 !important;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 0;
 }
 
 mat-card-content {
@@ -108,11 +108,11 @@ mat-card-actions.product-actions {
 }
 
 .btn-delete-mat {
-  color: var(--danger-color) !important;
-  border-color: var(--danger-color) !important;
+  color: var(--danger-color);
+  border-color: var(--danger-color);
 
   &:hover {
-    background-color: rgba(184, 18, 18, 0.04) !important;
+    background-color: rgba(184, 18, 18, 0.04);
   }
 }
 
@@ -140,7 +140,7 @@ mat-card-actions.product-actions {
 
     button {
       width: 100%;
-      margin-left: 0 !important;
+      margin-left: 0;
     }
   }
 }
