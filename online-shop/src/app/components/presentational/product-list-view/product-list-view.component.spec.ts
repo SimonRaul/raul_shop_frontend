@@ -38,6 +38,11 @@ describe('ProductListViewComponent', () => {
     expect(component.displayedColumns).toEqual(['image', 'name', 'price', 'actions']);
     expect(fixture.nativeElement.textContent).toContain('Desk');
     expect(fixture.nativeElement.textContent).toContain('250 RON');
+
+    const image = fixture.nativeElement.querySelector('img') as HTMLImageElement;
+    expect(image.alt).toBe('Desk');
+    expect(image.src).toContain('desk.jpg');
+    expect(fixture.nativeElement.querySelectorAll('tbody tr').length).toBe(1);
   });
 
   it('emits the product id when details is clicked', () => {
