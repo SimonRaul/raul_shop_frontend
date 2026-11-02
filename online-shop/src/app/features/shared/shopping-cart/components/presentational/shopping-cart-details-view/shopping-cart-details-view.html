@@ -20,18 +20,24 @@
 
               <div class="item-actions">
                 <div class="quantity-control">
-                  <label for="qty-{{ item.product.id }}">Quantity:</label>
-                  <input
-                    id="qty-{{ item.product.id }}"
-                    #qtyInput
-                    type="number"
-                    class="qty-input"
-                    [value]="item.quantity"
-                    min="1"
-                    (change)="
-                      quantityChanged.emit({ productId: item.product.id, rawValue: qtyInput.value })
-                    "
-                  />
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="qty-field">
+                    <mat-label>Quantity:</mat-label>
+                    <input
+                      matInput
+                      id="qty-{{ item.product.id }}"
+                      #qtyInput
+                      type="number"
+                      class="qty-input"
+                      [value]="item.quantity"
+                      min="1"
+                      (change)="
+                        quantityChanged.emit({
+                          productId: item.product.id,
+                          rawValue: qtyInput.value,
+                        })
+                      "
+                    />
+                  </mat-form-field>
                 </div>
                 <button mat-stroked-button color="warn" (click)="itemRemoved.emit(item.product.id)">
                   Delete

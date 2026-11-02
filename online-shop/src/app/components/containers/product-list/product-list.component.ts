@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { ProductListViewComponent } from '../../presentational/product-list-view/product-list-view.component';
 import { Router } from '@angular/router';
 import { hasUserRole, UserRole } from '../../../features/shared/types/users.types';
@@ -19,9 +19,9 @@ import { selectAuthState } from '../../../core/state/auth/auth.reducers';
   >
   </app-product-list-view>`,
 })
-export class ProductListComponent {
-  private router = inject(Router);
-  private store = inject(Store);
+export class ProductListComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly store = inject(Store);
   private readonly productsState = this.store.selectSignal(selectProducts);
   private readonly authState = this.store.selectSignal(selectAuthState);
   readonly productList = computed(() => this.productsState().list);
@@ -32,7 +32,7 @@ export class ProductListComponent {
   }
 
   goToDetails(productId: string): void {
-    this.router.navigate(['/product', productId]);
+    this.router.navigate(['/products', productId]);
   }
 
   onAddProduct(): void {

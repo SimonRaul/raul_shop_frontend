@@ -90,9 +90,15 @@
   label {
     color: var(--text-main);
   }
+  .qty-field {
+    width: 80px;
 
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      padding: 0 8px;
+    }
+  }
   .qty-input {
-    width: 60px;
+    width: 50px;
     padding: 0.5rem;
     border: 1px solid var(--border-color);
     border-radius: 6px;
