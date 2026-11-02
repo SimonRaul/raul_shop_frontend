@@ -31,11 +31,7 @@
         <button mat-stroked-button color="primary" (click)="updateProductClicked.emit(product.id)">
           Edit
         </button>
-        <button
-          mat-stroked-button
-          class="btn-delete-mat"
-          (click)="deleteProductClicked.emit(product.id)"
-        >
+        <button mat-stroked-button class="btn-delete-mat" (click)="showDeleteConfirmation()">
           Delete
         </button>
       }
