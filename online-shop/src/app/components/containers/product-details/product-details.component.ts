@@ -3,8 +3,9 @@ import { ProductDetailsViewComponent } from '../../presentational/product-detail
 import { ActivatedRoute, Router } from '@angular/router';
 import { hasUserRole, UserRole } from '../../../features/shared/types/users.types';
 import { Store } from '@ngrx/store';
-import { ProductActions } from '../../../features/shared/state/app.actions';
-import { selectAuth, selectProducts } from '../../../features/shared/state/app.reducers';
+import { ProductActions } from '../../../features/products/state/products.actions';
+import { selectProducts } from '../../../features/products/state/products.reducers';
+import { selectAuthState } from '../../../core/state/auth/auth.reducers';
 import { ShoppingCartService } from '../../../features/shared/shopping-cart/services/shopping-cart.service';
 
 @Component({
@@ -29,7 +30,7 @@ export class ProductDetailsComponent implements OnInit {
   private readonly cartService = inject(ShoppingCartService);
   private readonly router = inject(Router);
   private readonly productsState = this.store.selectSignal(selectProducts);
-  private readonly authState = this.store.selectSignal(selectAuth);
+  private readonly authState = this.store.selectSignal(selectAuthState);
   readonly product = computed(() => this.productsState().selectedProduct);
   readonly isAdmin = computed(() => hasUserRole(this.authState().user, UserRole.ADMIN));
 

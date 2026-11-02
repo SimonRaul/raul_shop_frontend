@@ -7,8 +7,10 @@ import { tokenInterceptor } from './interceptors/token-interceptor';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { AppEffects } from './features/shared/state/app.effects';
-import { appFeature } from './features/shared/state/app.reducers';
+import { authFeature } from './core/state/auth/auth.reducers';
+import { productsFeature } from './features/products/state/products.reducers';
+import { AuthEffects } from './core/state/auth/auth.effects';
+import { ProductsEffects } from './features/products/state/products.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,8 +18,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, tokenInterceptor])),
     provideStore(),
-    provideState(appFeature),
-    provideEffects([AppEffects]),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), name: 'SolarVest-App' }),
+    provideState(authFeature),
+    provideState(productsFeature),
+    provideEffects([AuthEffects, ProductsEffects]),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), name: 'Online-Shop-App' }),
   ],
 };

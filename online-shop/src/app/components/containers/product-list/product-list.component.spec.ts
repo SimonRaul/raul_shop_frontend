@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ProductListComponent } from './product-list.component';
-import { ProductActions } from '../../../features/shared/state/app.actions';
-import { selectAuth, selectProducts } from '../../../features/shared/state/app.reducers';
+import { ProductActions } from '../../../features/products/state/products.actions';
+import { selectProducts } from '../../../features/products/state/products.reducers';
 import { Product } from '../../../features/shared/types/products.types';
 import { UserRole } from '../../../features/shared/types/users.types';
 

@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ProductsFormComponent } from './products-form.component';
-import { CategoryActions, ProductActions } from '../../../features/shared/state/app.actions';
-import { selectCategories, selectProducts } from '../../../features/shared/state/app.reducers';
+import { CategoryActions, ProductActions } from '../../../features/products/state/products.actions';
+import { selectCategories } from '../../../features/products/state/products.reducers';
 import { CreateProductRequest, Product } from '../../../features/shared/types/products.types';
 
 describe('ProductsFormComponent', () => {

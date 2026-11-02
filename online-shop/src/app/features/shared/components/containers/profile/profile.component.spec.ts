@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectAuth } from '../../../state/app.reducers';
+import { selectAuthState } from '../../../../../core/state/auth/auth.reducers';
 import { User } from '../../../types/users.types';
 import { ProfileComponent } from './profile.component';
 
@@ -21,7 +21,7 @@ describe('ProfileComponent', () => {
           provide: Store,
           useValue: {
             selectSignal: (selector: unknown) =>
-              selector === selectAuth ? authState : signal(null),
+              selector === selectAuthState ? authState : signal(null),
           },
         },
       ],

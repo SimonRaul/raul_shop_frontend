@@ -3,8 +3,9 @@ import { ProductListViewComponent } from '../../presentational/product-list-view
 import { Router } from '@angular/router';
 import { hasUserRole, UserRole } from '../../../features/shared/types/users.types';
 import { Store } from '@ngrx/store';
-import { ProductActions } from '../../../features/shared/state/app.actions';
-import { selectAuth, selectProducts } from '../../../features/shared/state/app.reducers';
+import { ProductActions } from '../../../features/products/state/products.actions';
+import { selectProducts } from '../../../features/products/state/products.reducers';
+import { selectAuthState } from '../../../core/state/auth/auth.reducers';
 
 @Component({
   imports: [ProductListViewComponent],
@@ -22,7 +23,7 @@ export class ProductListComponent {
   private router = inject(Router);
   private store = inject(Store);
   private readonly productsState = this.store.selectSignal(selectProducts);
-  private readonly authState = this.store.selectSignal(selectAuth);
+  private readonly authState = this.store.selectSignal(selectAuthState);
   readonly productList = computed(() => this.productsState().list);
   readonly isAdmin = computed(() => hasUserRole(this.authState().user, UserRole.ADMIN));
 

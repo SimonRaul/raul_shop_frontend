@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { CheckoutPageViewComponent } from '../../presentational/checkout-page-view/checkout-page-view.component';
 import { Address } from '../../../types/address.types';
 import { Checkout } from '../../../types/checkout.types';
-import { selectAuth } from '../../../state/app.reducers';
+import { selectAuthState } from '../../../../../core/state/auth/auth.reducers';
 import { Store } from '@ngrx/store';
 import { ShoppingCartService } from '../../../shopping-cart/services/shopping-cart.service';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 })
 export class CheckoutPageComponent {
   private readonly store = inject(Store);
-  private readonly authState = this.store.selectSignal(selectAuth);
+  private readonly authState = this.store.selectSignal(selectAuthState);
   private readonly shoppingCartService = inject(ShoppingCartService);
   cartState = this.shoppingCartService.getCartState();
   currentUser = computed(() => this.authState().user);

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectAuth } from '../../../state/app.reducers';
+import { selectAuthState } from '../../../../../core/state/auth/auth.reducers';
 import { User } from '../../../types/users.types';
 import { PageHeaderComponent } from './page-header.component';
 
@@ -22,7 +22,8 @@ describe('PageHeaderComponent', () => {
           provide: Store,
           useValue: {
             dispatch,
-            selectSignal: (selector: unknown) => (selector === selectAuth ? authState : signal(null)),
+            selectSignal: (selector: unknown) =>
+              selector === selectAuthState ? authState : signal(null),
           },
         },
         provideRouter([]),

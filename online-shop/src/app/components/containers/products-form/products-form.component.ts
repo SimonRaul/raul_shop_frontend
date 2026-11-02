@@ -10,8 +10,11 @@ import { ProductsFormViewComponent } from '../../presentational/products-form-vi
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateProductRequest } from '../../../features/shared/types/products.types';
 import { Store } from '@ngrx/store';
-import { selectCategories, selectProducts } from '../../../features/shared/state/app.reducers';
-import { CategoryActions, ProductActions } from '../../../features/shared/state/app.actions';
+import {
+  selectCategories,
+  selectProducts,
+} from '../../../features/products/state/products.reducers';
+import { CategoryActions, ProductActions } from '../../../features/products/state/products.actions';
 
 @Component({
   imports: [ProductsFormViewComponent],

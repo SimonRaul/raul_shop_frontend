@@ -1,20 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { User, UserLoginRequest } from '../types/users.types';
-import { CreateProductRequest, Product } from '../types/products.types';
-import { Category } from '../types/product-category.types';
-
-export const AuthActions = createActionGroup({
-  source: 'Auth',
-  events: {
-    Login: props<{ request: UserLoginRequest }>(),
-    Logout: emptyProps(),
-    'Validate Session': emptyProps(),
-    'Login Success': props<{ user: User; token: string }>(),
-    'Login Failure': props<{ error: string }>(),
-    'Session Valid': props<{ user: User; token: string }>(),
-    'Session Invalid': emptyProps(),
-  },
-});
+import { CreateProductRequest, Product } from '../../shared/types/products.types';
+import { Category } from '../../shared/types/product-category.types';
 
 export const ProductActions = createActionGroup({
   source: 'Product',

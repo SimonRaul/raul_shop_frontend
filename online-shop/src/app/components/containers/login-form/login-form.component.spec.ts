@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginFormComponent } from './login-form.component';
 import { signal } from '@angular/core';
-import { selectAuth } from '../../../features/shared/state/app.reducers';
+import { selectAuthState } from '../../../core/state/auth/auth.reducers';
 import { Store } from '@ngrx/store';
-import { AuthActions } from '../../../features/shared/state/app.actions';
+import { AuthActions } from '../../../core/state/auth/auth.actions';
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
@@ -24,7 +24,7 @@ describe('LoginFormComponent', () => {
           useValue: {
             dispatch,
             selectSignal: (selector: unknown) =>
-              selector === selectAuth ? authState : errorMessage,
+              selector === selectAuthState ? authState : errorMessage,
           },
         },
       ],

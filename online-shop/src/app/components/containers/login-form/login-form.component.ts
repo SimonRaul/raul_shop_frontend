@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { UserLoginRequest } from '../../../features/shared/types/users.types';
 import { LoginFormViewComponent } from '../../presentational/login-form-view/login-form-view.component';
 import { Store } from '@ngrx/store';
-import { selectAuth } from '../../../features/shared/state/app.reducers';
-import { AuthActions } from '../../../features/shared/state/app.actions';
+import { selectAuthState } from '../../../core/state/auth/auth.reducers';
+import { AuthActions } from '../../../core/state/auth/auth.actions';
 
 @Component({
   imports: [LoginFormViewComponent],
@@ -16,7 +16,7 @@ import { AuthActions } from '../../../features/shared/state/app.actions';
 })
 export class LoginFormComponent {
   private readonly store = inject(Store);
-  private readonly authState = this.store.selectSignal(selectAuth);
+  private readonly authState = this.store.selectSignal(selectAuthState);
   errorMessage = computed(() => this.authState().error);
 
   onLogin(formData: UserLoginRequest) {

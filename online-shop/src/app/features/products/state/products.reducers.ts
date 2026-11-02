@@ -1,17 +1,9 @@
-import { User } from '../types/users.types';
-import { Product } from '../types/products.types';
+import { Product } from '../../shared/types/products.types';
+import { Category } from '../../shared/types/product-category.types';
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { AuthActions, CategoryActions, ProductActions } from './app.actions';
-import { Category } from '../types/product-category.types';
+import { CategoryActions, ProductActions } from './products.actions';
 
-export interface AppState {
-  auth: {
-    user: User | null;
-    token: string | null;
-    isLoading: boolean;
-    isInitialized: boolean;
-    error: string | null;
-  };
+export interface ProductsState {
   products: {
     list: Product[];
     selectedProduct: Product | null;
@@ -25,14 +17,7 @@ export interface AppState {
   };
 }
 
-const initialState: AppState = {
-  auth: {
-    user: null,
-    token: null,
-    isLoading: false,
-    isInitialized: false,
-    error: null,
-  },
+export const initialProductsState: ProductsState = {
   products: {
     list: [],
     selectedProduct: null,
@@ -46,42 +31,10 @@ const initialState: AppState = {
   },
 };
 
-export const appFeature = createFeature({
-  name: 'app',
+export const productsFeature = createFeature({
+  name: 'products',
   reducer: createReducer(
-    initialState,
-
-    on(AuthActions.login, (state) => ({
-      ...state,
-      auth: { ...state.auth, isLoading: true, error: null },
-    })),
-    on(AuthActions.validateSession, (state) => ({
-      ...state,
-      auth: { ...state.auth, isLoading: true, error: null },
-    })),
-    on(AuthActions.loginSuccess, (state, { user, token }) => ({
-      ...state,
-      auth: { user, token, isLoading: false, isInitialized: true, error: null },
-    })),
-    on(AuthActions.loginFailure, (state, { error }) => ({
-      ...state,
-      auth: {
-        ...state.auth,
-        user: null,
-        token: null,
-        isLoading: false,
-        isInitialized: true,
-        error,
-      },
-    })),
-    on(AuthActions.logout, AuthActions.sessionInvalid, (state) => ({
-      ...state,
-      auth: { user: null, token: null, isLoading: false, isInitialized: true, error: null },
-    })),
-    on(AuthActions.sessionValid, (state, { user, token }) => ({
-      ...state,
-      auth: { user, token, isLoading: false, isInitialized: true, error: null },
-    })),
+    initialProductsState,
 
     on(ProductActions.loadProducts, (state) => ({
       ...state,
@@ -175,5 +128,4 @@ export const appFeature = createFeature({
   ),
 });
 
-export const { name, reducer, selectAppState, selectAuth, selectProducts, selectCategories } =
-  appFeature;
+export const { name, reducer, selectProducts, selectCategories } = productsFeature;
