@@ -51,7 +51,10 @@
             <mat-error>Price is required.</mat-error>
           }
           @if (productForm.get('price')?.errors?.['min'] && productForm.get('price')?.touched) {
-            <mat-error>Price cannot be negative.</mat-error>
+            <mat-error>Price must be grater than 0.</mat-error>
+          }
+          @if (productForm.get('price')?.errors?.['pattern'] && productForm.get('price')?.touched) {
+            <mat-error>Price must be a valid number.</mat-error>
           }
         </mat-form-field>
 
@@ -73,6 +76,11 @@
           }
           @if (productForm.get('weight')?.errors?.['min'] && productForm.get('weight')?.touched) {
             <mat-error>Weight cannot be negative.</mat-error>
+          }
+          @if (
+            productForm.get('weight')?.errors?.['pattern'] && productForm.get('weight')?.touched
+          ) {
+            <mat-error>Weight must be a valid number.</mat-error>
           }
         </mat-form-field>
       </div>
