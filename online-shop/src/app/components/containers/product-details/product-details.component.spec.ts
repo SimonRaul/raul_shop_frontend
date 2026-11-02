@@ -15,7 +15,15 @@ describe('ProductDetailsComponent', () => {
   let navigate: ReturnType<typeof vi.fn>;
   let addToCart: ReturnType<typeof vi.fn>;
   let routeId: string | null;
-  const productsState = signal<{ selectedProduct: Product | null }>({ selectedProduct: null });
+  const productsState = signal<{
+    selectedProduct: Product | null;
+    isLoading: boolean;
+    error: string | null;
+  }>({
+    selectedProduct: null,
+    isLoading: false,
+    error: null,
+  });
   const authState = signal<{ user: { role: string } | null }>({ user: null });
   const product: Product = {
     id: 'product-1',
@@ -33,7 +41,7 @@ describe('ProductDetailsComponent', () => {
     dispatch = vi.fn();
     navigate = vi.fn();
     addToCart = vi.fn();
-    productsState.set({ selectedProduct: null });
+    productsState.set({ selectedProduct: null, isLoading: false, error: null });
     authState.set({ user: null });
 
     await TestBed.configureTestingModule({
@@ -54,9 +62,7 @@ describe('ProductDetailsComponent', () => {
         { provide: Router, useValue: { navigate } },
         { provide: ShoppingCartService, useValue: { addToCart } },
       ],
-    })
-      .overrideComponent(ProductDetailsComponent, { set: { template: '' } })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ProductDetailsComponent);
     component = fixture.componentInstance;
@@ -78,16 +84,46 @@ describe('ProductDetailsComponent', () => {
   });
 
   it('exposes the selected product and admin state', () => {
-    productsState.set({ selectedProduct: product });
+    productsState.set({ selectedProduct: product, isLoading: false, error: null });
     expect(component.product()).toEqual(product);
+    expect(component.isLoading()).toBe(false);
+    expect(component.error()).toBeNull();
     expect(component.isAdmin()).toBe(false);
+  });
+
+  it('renders loading, error, and empty states separately', () => {
+    productsState.set({ selectedProduct: null, isLoading: true, error: null });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Loading product details...');
+
+    productsState.set({
+      selectedProduct: null,
+      isLoading: false,
+      error: 'Product request failed',
+    });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain(
+      'Unable to load product details: Product request failed',
+    );
+
+    productsState.set({ selectedProduct: null, isLoading: false, error: null });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Product not found.');
+  });
+
+  it('renders product details after loading succeeds', () => {
+    productsState.set({ selectedProduct: product, isLoading: false, error: null });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain(product.name);
+    expect(fixture.nativeElement.textContent).not.toContain('Product not found.');
   });
 
   it('adds the selected product to the cart and ignores an empty selection', () => {
     component.onAddToCartClicked();
     expect(addToCart).not.toHaveBeenCalled();
 
-    productsState.set({ selectedProduct: product });
+    productsState.set({ selectedProduct: product, isLoading: false, error: null });
     component.onAddToCartClicked();
     expect(addToCart).toHaveBeenCalledWith(product);
   });

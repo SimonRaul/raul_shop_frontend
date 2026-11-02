@@ -12,7 +12,11 @@ import { ShoppingCartService } from '../../../features/shared/shopping-cart/serv
   imports: [ProductDetailsViewComponent],
   selector: 'app-product-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` @if (product(); as p) {
+  template: ` @if (isLoading()) {
+      <p role="status">Loading product details...</p>
+    } @else if (error(); as errorMessage) {
+      <p role="alert">Unable to load product details: {{ errorMessage }}</p>
+    } @else if (product(); as p) {
       <app-product-details-view
         [productData]="p"
         [isAdmin]="isAdmin()"
@@ -21,7 +25,7 @@ import { ShoppingCartService } from '../../../features/shared/shopping-cart/serv
         (updateProductClicked)="onUpdate($event)"
       ></app-product-details-view>
     } @else {
-      <p>Loading Product Details...</p>
+      <p>Product not found.</p>
     }`,
 })
 export class ProductDetailsComponent implements OnInit {
@@ -32,6 +36,8 @@ export class ProductDetailsComponent implements OnInit {
   private readonly productsState = this.store.selectSignal(selectProducts);
   private readonly authState = this.store.selectSignal(selectAuthState);
   readonly product = computed(() => this.productsState().selectedProduct);
+  readonly isLoading = computed(() => this.productsState().isLoading);
+  readonly error = computed(() => this.productsState().error);
   readonly isAdmin = computed(() => hasUserRole(this.authState().user, UserRole.ADMIN));
 
   ngOnInit(): void {
