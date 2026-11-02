@@ -4,7 +4,7 @@ import { ProductsService } from '../../../services/products.service';
 import { ProductCategoryService } from '../../../services/product-category.service';
 import { Router } from '@angular/router';
 import { CategoryActions, ProductActions } from './products.actions';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, concatMap, map, of, switchMap, tap } from 'rxjs';
 
 @Injectable()
 export class ProductsEffects {
@@ -42,7 +42,7 @@ export class ProductsEffects {
   addProduct$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProductActions.addProduct),
-      switchMap(({ product }) =>
+      concatMap(({ product }) =>
         this.productsService.createProduct(product).pipe(
           map((newProduct) => ProductActions.addProductSuccess({ product: newProduct })),
           catchError((error) => of(ProductActions.addProductFailure({ error: error.message }))),
@@ -54,7 +54,7 @@ export class ProductsEffects {
   updateProduct$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProductActions.updateProduct),
-      switchMap(({ productId, productData }) =>
+      concatMap(({ productId, productData }) =>
         this.productsService.updateProduct(productId, productData).pipe(
           map((updatedProduct) => ProductActions.updateProductSuccess({ product: updatedProduct })),
           catchError((error) => of(ProductActions.updateProductFailure({ error: error.message }))),
@@ -66,7 +66,7 @@ export class ProductsEffects {
   deleteProduct$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProductActions.deleteProduct),
-      switchMap(({ productId }) =>
+      concatMap(({ productId }) =>
         this.productsService.deleteProduct(productId).pipe(
           map(() => ProductActions.deleteProductSuccess({ productId })),
           catchError((error) => of(ProductActions.deleteProductFailure({ error: error.message }))),
