@@ -1,9 +1,9 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Category } from '../features/shared/types/product-category.types';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class ProductCategoryService {
   private readonly http: HttpClient = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl + '/product-categories';

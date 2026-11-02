@@ -1,4 +1,4 @@
-import { inject, Service, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 import { Checkout } from '../../types/checkout.types';
@@ -6,9 +6,9 @@ import { CartState, initialCartState } from '../../types/cart-state.types';
 import { Product } from '../../types/products.types';
 import { CartItem } from '../../types/cart-item.types';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class ShoppingCartService {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
   cartState = signal<CartState>(initialCartState);
 

@@ -1,5 +1,4 @@
-import { inject } from '@angular/core';
-import { Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { User, UserLoginRequest } from '../features/shared/types/users.types';
 import { HttpClient } from '@angular/common/http';
@@ -10,7 +9,7 @@ export interface AuthSession {
   token: string;
 }
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl + '/auth';
