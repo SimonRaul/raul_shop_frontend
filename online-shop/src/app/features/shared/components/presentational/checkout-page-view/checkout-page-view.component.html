@@ -1,12 +1,12 @@
 @if (!isCheckedOut()) {
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Checkout</mat-card-title>
+      <mat-card-title i18n>Checkout</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="checkoutForm" (ngSubmit)="onCheckout()" class="checkout-form">
         <mat-form-field>
-          <mat-label>Country</mat-label>
+          <mat-label i18n>Country</mat-label>
           <input
             matInput
             id="country"
@@ -15,11 +15,11 @@
             placeholder="Enter your country"
           />
           @if (checkoutForm.get('country')?.hasError('required')) {
-            <mat-error>Country is required.</mat-error>
+            <mat-error i18n>Country is required.</mat-error>
           }
         </mat-form-field>
         <mat-form-field>
-          <mat-label>City</mat-label>
+          <mat-label i18n>City</mat-label>
           <input
             matInput
             id="city"
@@ -28,11 +28,11 @@
             placeholder="Enter your city"
           />
           @if (checkoutForm.get('city')?.hasError('required')) {
-            <mat-error>City is required.</mat-error>
+            <mat-error i18n>City is required.</mat-error>
           }
         </mat-form-field>
         <mat-form-field>
-          <mat-label>County</mat-label>
+          <mat-label i18n>County</mat-label>
           <input
             matInput
             id="county"
@@ -41,11 +41,11 @@
             placeholder="Enter your county"
           />
           @if (checkoutForm.get('county')?.hasError('required')) {
-            <mat-error>County is required.</mat-error>
+            <mat-error i18n>County is required.</mat-error>
           }
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Street Address</mat-label>
+          <mat-label i18n>Street Address</mat-label>
           <input
             matInput
             id="streetAddress"
@@ -54,7 +54,7 @@
             placeholder="Enter your street address"
           />
           @if (checkoutForm.get('streetAddress')?.hasError('required')) {
-            <mat-error>Street address is required.</mat-error>
+            <mat-error i18n>Street address is required.</mat-error>
           }
         </mat-form-field>
         <div class="form-actions">
@@ -62,7 +62,7 @@
             @if (isLoading()) {
               <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
             } @else {
-              Checkout
+              <span i18n>Checkout</span>
             }
           </button>
         </div>
@@ -72,14 +72,14 @@
 } @else {
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Checkout Successful</mat-card-title>
+      <mat-card-title i18n>Checkout Successful</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p>Your order has been placed successfully!</p>
+      <p i18n>Your order has been placed successfully!</p>
     </mat-card-content>
     <mat-card-actions>
       <button mat-flat-button color="primary" (click)="continueShoppingClicked.emit()">
-        Continue Shopping
+        <span i18n>Continue Shopping</span>
       </button>
     </mat-card-actions>
   </mat-card>

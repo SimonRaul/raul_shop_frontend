@@ -7,13 +7,13 @@
 
       <mat-card-title-group>
         <mat-card-title>{{ product.name }}</mat-card-title>
-        <mat-card-subtitle>Price: {{ product.price }} RON</mat-card-subtitle>
+        <mat-card-subtitle i18n>Price: {{ product.price }} RON</mat-card-subtitle>
       </mat-card-title-group>
     </mat-card-header>
 
     <mat-card-content>
       <div class="item-category">
-        <h3>Category: {{ product.category }}</h3>
+        <h3 i18n>Category: {{ product.category }}</h3>
         <p>{{ product.categoryDescription }}</p>
       </div>
 
@@ -22,24 +22,30 @@
       </div>
 
       <div class="item-weight">
-        <p>Weight: {{ product.weight }} kg</p>
+        <p i18n>Weight: {{ product.weight }} kg</p>
       </div>
     </mat-card-content>
 
     <mat-card-actions class="product-actions">
       @if (isAdmin()) {
-        <button mat-stroked-button color="primary" (click)="updateProductClicked.emit(product.id)">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="updateProductClicked.emit(product.id)"
+          i18n
+        >
           Edit
         </button>
         <button
           mat-stroked-button
           class="btn-delete-mat"
           (click)="deleteProductClicked.emit(product.id)"
+          i18n
         >
           Delete
         </button>
       }
-      <button mat-flat-button color="primary" (click)="addToCartClicked.emit(product)">
+      <button mat-flat-button color="primary" (click)="addToCartClicked.emit(product)" i18n>
         Add to Cart
       </button>
     </mat-card-actions>

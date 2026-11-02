@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Login</mat-card-title>
+    <mat-card-title i18n>Login</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
@@ -10,7 +10,7 @@
       }
 
       <mat-form-field>
-        <mat-label>Username</mat-label>
+        <mat-label i18n>Username</mat-label>
         <input
           matInput
           id="username"
@@ -19,12 +19,12 @@
           placeholder="Enter your username"
         />
         @if (loginForm.get('username')?.hasError('required')) {
-          <mat-error>Username is required.</mat-error>
+          <mat-error i18n>Username is required.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Password</mat-label>
+        <mat-label i18n>Password</mat-label>
         <input
           matInput
           id="password"
@@ -33,10 +33,10 @@
           placeholder="Enter your password"
         />
         @if (loginForm.get('password')?.hasError('required')) {
-          <mat-error>Password is required.</mat-error>
+          <mat-error i18n>Password is required.</mat-error>
         }
         @if (loginForm.get('password')?.hasError('pattern')) {
-          <mat-error>
+          <mat-error i18n>
             Password must be at least 8 characters long and contain at least one uppercase letter,
             one lowercase letter, and one number.
           </mat-error>
@@ -44,7 +44,7 @@
       </mat-form-field>
 
       <div class="form-actions">
-        <button mat-flat-button type="submit" [disabled]="loginForm.invalid">Login</button>
+        <button mat-flat-button type="submit" [disabled]="loginForm.invalid" i18n>Login</button>
       </div>
     </form>
   </mat-card-content>
