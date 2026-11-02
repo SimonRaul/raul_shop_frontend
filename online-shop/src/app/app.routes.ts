@@ -3,6 +3,12 @@ import { ProductListComponent } from './components/containers/product-list/produ
 import { authGuard } from './guards/auth-guard';
 import { adminGuard } from './guards/admin-guard';
 import { guestGuard } from './guards/guest-guard';
+import { ProductsFormComponent } from './components/containers/products-form/products-form.component';
+import { ShoppingCartDetailsComponent } from './features/shared/shopping-cart/components/containers/shopping-cart-details/shopping-cart-details.component';
+import { LoginFormComponent } from './components/containers/login-form/login-form.component';
+import { ProductDetailsComponent } from './components/containers/product-details/product-details.component';
+import { ProfileComponent } from './features/shared/components/containers/profile/profile.component';
+import { CheckoutPageComponent } from './features/shared/components/containers/checkout-page/checkout-page.component';
 
 export const routes: Routes = [
   {
@@ -11,11 +17,8 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'product/:id',
-    loadComponent: () =>
-      import('./components/containers/product-details/product-details.component').then(
-        (m) => m.ProductDetailsComponent,
-      ),
+    path: 'products/:id',
+    component: ProductDetailsComponent,
     canActivate: [authGuard],
   },
   {
@@ -25,50 +28,32 @@ export const routes: Routes = [
   },
   {
     path: 'shopping-cart',
-    loadComponent: () =>
-      import('./features/shared/shopping-cart/components/containers/shopping-cart-details/shopping-cart-details.component').then(
-        (m) => m.ShoppingCartDetailsComponent,
-      ),
+    component: ShoppingCartDetailsComponent,
     canActivate: [authGuard],
   },
   {
     path: 'checkout',
-    loadComponent: () =>
-      import('./features/shared/components/containers/checkout-page/checkout-page.component').then(
-        (m) => m.CheckoutPageComponent,
-      ),
+    component: CheckoutPageComponent,
     canActivate: [authGuard],
   },
   {
     path: 'products/:id/edit',
-    loadComponent: () =>
-      import('./components/containers/products-form/products-form.component').then(
-        (m) => m.ProductsFormComponent,
-      ),
+    component: ProductsFormComponent,
     canActivate: [authGuard, adminGuard],
   },
   {
     path: 'products/new',
-    loadComponent: () =>
-      import('./components/containers/products-form/products-form.component').then(
-        (m) => m.ProductsFormComponent,
-      ),
+    component: ProductsFormComponent,
     canActivate: [authGuard, adminGuard],
   },
   {
     path: 'profile',
-    loadComponent: () =>
-      import('./features/shared/components/containers/profile/profile.component').then(
-        (m) => m.ProfileComponent,
-      ),
+    component: ProfileComponent,
     canActivate: [authGuard],
   },
   {
     path: 'login',
-    loadComponent: () =>
-      import('./components/containers/login-form/login-form.component').then(
-        (m) => m.LoginFormComponent,
-      ),
+    component: LoginFormComponent,
     canActivate: [guestGuard],
   },
   {
