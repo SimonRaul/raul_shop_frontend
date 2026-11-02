@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
     [isCheckedOut]="isCheckedOut()"
     (continueShoppingClicked)="onContinueShopping()"
     [isLoading]="isLoading()"
+    [errorMessage]="errorMessage()"
   ></app-checkout-page-view>`,
 })
 export class CheckoutPageComponent {
@@ -27,12 +28,15 @@ export class CheckoutPageComponent {
   private readonly router = inject(Router);
   isCheckedOut = signal<boolean>(false);
   isLoading = signal<boolean>(false);
+  errorMessage = signal<string | null>(null);
 
   onCheckout(address: Address) {
     this.isLoading.set(true);
+    this.errorMessage.set(null);
     const user = this.currentUser();
 
     if (!user) {
+      this.isLoading.set(false);
       this.router.navigate(['/login']);
       return;
     }
@@ -53,8 +57,10 @@ export class CheckoutPageComponent {
         this.isCheckedOut.set(true);
         this.isLoading.set(false);
       },
-      error: (err) => {
-        console.error('Error at sending order:', err);
+      error: (error: unknown) => {
+        this.errorMessage.set(
+          error instanceof Error ? error.message : 'Unable to place your order. Please try again.',
+        );
         this.isLoading.set(false);
       },
     });

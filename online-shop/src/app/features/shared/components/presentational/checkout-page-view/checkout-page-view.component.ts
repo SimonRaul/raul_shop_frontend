@@ -27,6 +27,7 @@ export class CheckoutPageViewComponent {
   isCheckedOut = input.required<boolean>();
   continueShoppingClicked = output<void>();
   isLoading = input.required<boolean>();
+  errorMessage = input<string | null>(null);
 
   checkoutForm = this.formBuilder.nonNullable.group({
     country: ['', [Validators.required]],

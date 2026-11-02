@@ -88,7 +88,7 @@ describe('CheckoutPageComponent', () => {
 
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
     expect(shoppingCartService.createOrder).not.toHaveBeenCalled();
-    expect(component.isLoading()).toBe(true);
+    expect(component.isLoading()).toBe(false);
   });
 
   it('creates an order with the current address, cart, and customer', () => {
@@ -109,19 +109,25 @@ describe('CheckoutPageComponent', () => {
     expect(component.isLoading()).toBe(false);
   });
 
-  it('clears loading state when order creation fails', () => {
+  it('shows an error and clears loading state when order creation fails', () => {
     const error = new Error('Order failed');
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     shoppingCartService.createOrder.mockReturnValue(throwError(() => error));
 
     component.onCheckout(address);
 
-    expect(consoleError).toHaveBeenCalledWith('Error at sending order:', error);
     expect(shoppingCartService.clearCart).not.toHaveBeenCalled();
     expect(component.isCheckedOut()).toBe(false);
     expect(component.isLoading()).toBe(false);
+    expect(component.errorMessage()).toBe('Order failed');
+  });
 
-    consoleError.mockRestore();
+  it('clears a previous checkout error when retrying', () => {
+    component.errorMessage.set('Order failed');
+    shoppingCartService.createOrder.mockReturnValue(of({}));
+
+    component.onCheckout(address);
+
+    expect(component.errorMessage()).toBeNull();
   });
 
   it('resets checkout state and navigates to products when continuing shopping', () => {
@@ -136,6 +142,7 @@ describe('CheckoutPageComponent', () => {
   it('passes checkout state and handlers to the presentational view', () => {
     component.isCheckedOut.set(true);
     component.isLoading.set(true);
+    component.errorMessage.set('Order failed');
     fixture.detectChanges();
 
     const view = fixture.nativeElement.querySelector('app-checkout-page-view');
@@ -143,5 +150,6 @@ describe('CheckoutPageComponent', () => {
     expect(view).toBeTruthy();
     expect(component.isCheckedOut()).toBe(true);
     expect(component.isLoading()).toBe(true);
+    expect(view.textContent).toContain('Checkout Successful');
   });
 });

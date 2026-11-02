@@ -49,6 +49,16 @@ describe('CheckoutPageViewComponent', () => {
     expect(component.checkoutForm.controls.streetAddress.touched).toBe(true);
   });
 
+  it('renders the checkout error as an alert', () => {
+    fixture.componentRef.setInput('errorMessage', 'Order failed');
+    fixture.detectChanges();
+
+    const error = fixture.nativeElement.querySelector('[role="alert"]');
+
+    expect(error).toBeTruthy();
+    expect(error.textContent).toContain('Order failed');
+  });
+
   it('renders the success state and emits when continuing shopping', () => {
     const continueShopping = vi.fn();
     component.continueShoppingClicked.subscribe(continueShopping);
