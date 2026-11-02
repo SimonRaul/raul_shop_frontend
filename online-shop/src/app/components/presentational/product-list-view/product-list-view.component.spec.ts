@@ -26,6 +26,8 @@ describe('ProductListViewComponent', () => {
     fixture = TestBed.createComponent(ProductListViewComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('products', products);
+    fixture.componentRef.setInput('isLoading', false);
+    fixture.componentRef.setInput('error', null);
     fixture.componentRef.setInput('isAdmin', false);
     fixture.detectChanges();
     await fixture.whenStable();
@@ -62,5 +64,33 @@ describe('ProductListViewComponent', () => {
     addButton.click();
 
     expect(added).toHaveBeenCalledOnce();
+  });
+
+  it('renders loading, error with retry, and empty-list states', () => {
+    fixture.componentRef.setInput('isLoading', true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Loading products...');
+    expect(fixture.nativeElement.textContent).not.toContain('Desk');
+
+    const retried = vi.fn();
+    component.retryClicked.subscribe(retried);
+    fixture.componentRef.setInput('isLoading', false);
+    fixture.componentRef.setInput('error', 'Backend unavailable');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain(
+      'Unable to load products: Backend unavailable',
+    );
+    expect(fixture.nativeElement.textContent).not.toContain('Desk');
+    const retryButton = Array.from(
+      fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>,
+    ).find((button) => button.textContent.includes('Retry')) as HTMLButtonElement;
+    retryButton.click();
+    expect(retried).toHaveBeenCalledOnce();
+
+    fixture.componentRef.setInput('error', null);
+    fixture.componentRef.setInput('products', []);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('No products available.');
   });
 });

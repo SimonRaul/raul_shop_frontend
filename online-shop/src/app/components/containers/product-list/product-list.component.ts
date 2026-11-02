@@ -13,9 +13,12 @@ import { selectAuthState } from '../../../core/state/auth/auth.reducers';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <app-product-list-view
     [products]="productList()"
+    [isLoading]="isLoading()"
+    [error]="error()"
+    [isAdmin]="isAdmin()"
     (productClicked)="goToDetails($event)"
     (addProductClicked)="onAddProduct()"
-    [isAdmin]="isAdmin()"
+    (retryClicked)="loadProducts()"
   >
   </app-product-list-view>`,
 })
@@ -25,9 +28,15 @@ export class ProductListComponent implements OnInit {
   private readonly productsState = this.store.selectSignal(selectProducts);
   private readonly authState = this.store.selectSignal(selectAuthState);
   readonly productList = computed(() => this.productsState().list);
+  readonly isLoading = computed(() => this.productsState().isLoading);
+  readonly error = computed(() => this.productsState().error);
   readonly isAdmin = computed(() => hasUserRole(this.authState().user, UserRole.ADMIN));
 
   ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
     this.store.dispatch(ProductActions.loadProducts());
   }
 

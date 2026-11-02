@@ -13,7 +13,11 @@ describe('ProductListComponent', () => {
   let fixture: ComponentFixture<ProductListComponent>;
   let dispatch: ReturnType<typeof vi.fn>;
   let navigate: ReturnType<typeof vi.fn>;
-  const productsState = signal<{ list: Product[] }>({ list: [] });
+  const productsState = signal<{
+    list: Product[];
+    isLoading: boolean;
+    error: string | null;
+  }>({ list: [], isLoading: false, error: null });
   const authState = signal<{ user: { role: string } | null }>({ user: null });
   const product: Product = {
     id: 'product-1',
@@ -29,7 +33,7 @@ describe('ProductListComponent', () => {
   beforeEach(async () => {
     dispatch = vi.fn();
     navigate = vi.fn();
-    productsState.set({ list: [] });
+    productsState.set({ list: [], isLoading: false, error: null });
     authState.set({ user: null });
 
     await TestBed.configureTestingModule({
@@ -60,17 +64,30 @@ describe('ProductListComponent', () => {
   });
 
   it('exposes products and determines whether the current user is an admin', () => {
-    productsState.set({ list: [product] });
+    productsState.set({ list: [product], isLoading: false, error: null });
     expect(component.productList()).toEqual([product]);
+    expect(component.isLoading()).toBe(false);
+    expect(component.error()).toBeNull();
     expect(component.isAdmin()).toBe(false);
 
     authState.set({ user: { role: `ROLE_${UserRole.ADMIN}` } });
     expect(component.isAdmin()).toBe(true);
   });
 
+  it('exposes request state and retries loading products', () => {
+    productsState.set({ list: [], isLoading: true, error: null });
+    expect(component.isLoading()).toBe(true);
+
+    productsState.set({ list: [], isLoading: false, error: 'Load failed' });
+    expect(component.error()).toBe('Load failed');
+
+    component.loadProducts();
+    expect(dispatch).toHaveBeenCalledWith(ProductActions.loadProducts());
+  });
+
   it('navigates to product details and the new-product form', () => {
     component.goToDetails(product.id);
-    expect(navigate).toHaveBeenCalledWith(['/product', product.id]);
+    expect(navigate).toHaveBeenCalledWith(['/products', product.id]);
 
     component.onAddProduct();
     expect(navigate).toHaveBeenCalledWith(['/products', 'new']);
