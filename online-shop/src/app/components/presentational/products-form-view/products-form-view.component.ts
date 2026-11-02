@@ -35,8 +35,18 @@ export class ProductsFormViewComponent {
   productForm = this.formBuilder.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
-    price: [0, [Validators.required, Validators.min(0)]],
-    weight: [0, [Validators.required, Validators.min(0)]],
+    price: [
+      0,
+      [
+        Validators.required,
+        Validators.min(0.01),
+        Validators.pattern(String.raw`^[0-9]+(\.[0-9]{1,2})?$`),
+      ],
+    ],
+    weight: [
+      0,
+      [Validators.required, Validators.min(0), Validators.pattern(String.raw`^[0-9]+(\.[0-9]+)?$`)],
+    ],
     categoryId: ['', Validators.required],
     imageUrl: ['', Validators.required],
   });
