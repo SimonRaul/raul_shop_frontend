@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { User, UserLoginRequest } from '../features/shared/types/users.types';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, switchMap, tap, throwError } from 'rxjs';
+import { JwtPayload } from '../features/shared/types/jwt-payload.types';
 
 export interface AuthSession {
   user: User;
@@ -45,7 +46,7 @@ export class AuthService {
     localStorage.setItem('auth_token', token);
   }
 
-  private decodeToken(token: string | null): any {
+  private decodeToken(token: string | null): JwtPayload | null {
     if (!token) return null;
 
     try {
@@ -56,10 +57,24 @@ export class AuthService {
       const paddingLength = (4 - (base64.length % 4)) % 4;
       const padded = base64.padEnd(base64.length + paddingLength, '=');
 
+      const decoded: unknown = JSON.parse(atob(padded));
+
+      if (this.isValidJwtPayload(decoded)) {
+        return decoded;
+      }
+
       return JSON.parse(atob(padded));
     } catch {
       return null;
     }
+  }
+
+  private isValidJwtPayload(payload: unknown): payload is JwtPayload {
+    if (typeof payload !== 'object' || payload === null) {
+      return false;
+    }
+    const record = payload as Record<string, unknown>;
+    return 'exp' in record && typeof record['exp'] === 'number';
   }
 
   isTokenExpired(): boolean {
