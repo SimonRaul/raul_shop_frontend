@@ -1,0 +1,135 @@
+<mat-card class="product-form-card">
+  <mat-card-header>
+    <mat-card-title>Product Form</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="productForm()" (ngSubmit)="onSubmit()" class="product-form">
+      <mat-form-field>
+        <mat-label i18n>Name</mat-label>
+        <input
+          matInput
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="E.g., Wireless Mouse"
+        />
+        @if (productForm().controls.name.hasError('required')) {
+          <mat-error>Name is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label i18n>Description</mat-label>
+        <textarea
+          matInput
+          id="description"
+          formControlName="description"
+          placeholder="Enter product details..."
+          rows="3"
+        ></textarea>
+        @if (productForm().controls.description.hasError('required')) {
+          <mat-error i18n>Description is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field class="half-width">
+          <mat-label i18n>Price</mat-label>
+          <input
+            matInput
+            id="price"
+            type="number"
+            formControlName="price"
+            class="example-left-align"
+            placeholder="0"
+          />
+          <span matTextSuffix>Lei</span>
+
+          @if (productForm().controls.price.hasError('required')) {
+            <mat-error i18n>Price is required.</mat-error>
+          }
+          @if (productForm().controls.price.hasError('min')) {
+            <mat-error>Price must be greater than 0.</mat-error>
+          }
+          @if (productForm().controls.price.hasError('pattern')) {
+            <mat-error i18n>Price must be a valid number.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="half-width">
+          <mat-label i18n>Weight</mat-label>
+          <input
+            matInput
+            id="weight"
+            type="number"
+            formControlName="weight"
+            class="example-left-align"
+            placeholder="0"
+          />
+          <span matTextSuffix>Kg</span>
+
+          @if (productForm().controls.weight.hasError('required')) {
+            <mat-error i18n>Weight is required.</mat-error>
+          }
+          @if (productForm().controls.weight.hasError('min')) {
+            <mat-error i18n>Weight cannot be negative.</mat-error>
+          }
+          @if (productForm().controls.weight.hasError('pattern')) {
+            <mat-error i18n>Weight must be a valid number.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label i18n>Category</mat-label>
+        <mat-select id="categoryId" formControlName="categoryId" placeholder="Select a category">
+          @for (category of categories(); track category.id) {
+            <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+        @if (productForm().controls.categoryId.hasError('required')) {
+          <mat-error i18n>Category is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label i18n>Image URL</mat-label>
+        <input
+          matInput
+          id="imageUrl"
+          type="text"
+          formControlName="imageUrl"
+          placeholder="https://..."
+        />
+        @if (productForm().controls.imageUrl.hasError('required')) {
+          <mat-error i18n>Image URL is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="cancelClicked.emit()"
+          [disabled]="isLoading()"
+        >
+          <span i18n>Cancel</span>
+        </button>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="productForm().invalid || isLoading()"
+        >
+          @if (isLoading()) {
+            <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
+          } @else {
+            <span i18n>Save Product</span>
+          }
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

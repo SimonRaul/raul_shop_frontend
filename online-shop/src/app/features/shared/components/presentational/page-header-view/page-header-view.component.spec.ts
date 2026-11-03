@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { PageHeaderViewComponent } from './page-header-view.component';
-import { User } from '../../../types/users.types';
+import { User } from '../../../../user/types/users.types';
 
 describe('PageHeaderViewComponent', () => {
   let component: PageHeaderViewComponent;
@@ -23,6 +23,16 @@ describe('PageHeaderViewComponent', () => {
   it('shows login navigation when logged out', () => {
     expect(fixture.nativeElement.textContent).not.toContain('Products');
     expect(fixture.nativeElement.textContent).toContain('login');
+
+    const loginButton = fixture.nativeElement.querySelector(
+      'button[routerLink="/login"]',
+    ) as HTMLButtonElement;
+    const cartLink = fixture.nativeElement.querySelector(
+      'a[routerLink="/shopping-cart"]',
+    ) as HTMLAnchorElement;
+    expect(loginButton).toBeTruthy();
+    expect(cartLink).toBeTruthy();
+    expect(cartLink.getAttribute('href')).toBe('/shopping-cart');
   });
 
   it('shows authenticated navigation and emits logout', () => {
@@ -42,8 +52,25 @@ describe('PageHeaderViewComponent', () => {
 
     expect(fixture.nativeElement.textContent).toContain('Products');
     expect(fixture.nativeElement.textContent).toContain('Jane');
-    (fixture.nativeElement.querySelector('button[mat-icon-button]:last-of-type') as HTMLButtonElement).click();
 
-    expect(logout).toHaveBeenCalled();
+    const productsLink = fixture.nativeElement.querySelector(
+      'a[routerLink="/products"]',
+    ) as HTMLAnchorElement;
+    const profileButton = fixture.nativeElement.querySelector(
+      'button[routerLink="/profile"]',
+    ) as HTMLButtonElement;
+    const logoutButton = Array.from(
+      fixture.nativeElement.querySelectorAll(
+        'button[mat-icon-button]',
+      ) as NodeListOf<HTMLButtonElement>,
+    ).find((button) => button.textContent?.includes('logout')) as HTMLButtonElement;
+    expect(productsLink.getAttribute('href')).toBe('/products');
+    expect(profileButton).toBeTruthy();
+    expect(profileButton.textContent).toContain('Jane');
+    expect(logoutButton).toBeTruthy();
+
+    logoutButton.click();
+
+    expect(logout).toHaveBeenCalledOnce();
   });
 });

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { User } from '../../../types/users.types';
+import { User } from '../../../../user/types/users.types';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './page-header-view.component.html',
 })
 export class PageHeaderViewComponent {
-  isLoggedIn = input.required<boolean>();
-  currentUser = input<User | null>(null);
-  logoutClicked = output<void>();
+  readonly isLoggedIn = input.required<boolean>();
+  readonly currentUser = input<User | null>(null);
+  readonly logoutClicked = output<void>();
 }

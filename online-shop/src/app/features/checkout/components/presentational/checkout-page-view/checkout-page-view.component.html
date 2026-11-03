@@ -1,0 +1,94 @@
+@if (!isCheckedOut()) {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title i18n>Checkout</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="checkoutForm" (ngSubmit)="onCheckout()" class="checkout-form">
+        @if (errorMessage()) {
+          <mat-error role="alert" class="checkout-error">{{ errorMessage() }}</mat-error>
+        }
+        <mat-form-field>
+          <mat-label i18n>Country</mat-label>
+          <input
+            matInput
+            id="country"
+            type="text"
+            formControlName="country"
+            placeholder="Enter your country"
+          />
+          @if (checkoutForm.get('country')?.hasError('required')) {
+            <mat-error i18n>Country is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label i18n>City</mat-label>
+          <input
+            matInput
+            id="city"
+            type="text"
+            formControlName="city"
+            placeholder="Enter your city"
+          />
+          @if (checkoutForm.get('city')?.hasError('required')) {
+            <mat-error i18n>City is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label i18n>County</mat-label>
+          <input
+            matInput
+            id="county"
+            type="text"
+            formControlName="county"
+            placeholder="Enter your county"
+          />
+          @if (checkoutForm.get('county')?.hasError('required')) {
+            <mat-error i18n>County is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label i18n>Street Address</mat-label>
+          <input
+            matInput
+            id="streetAddress"
+            type="text"
+            formControlName="streetAddress"
+            placeholder="Enter your street address"
+          />
+          @if (checkoutForm.get('streetAddress')?.hasError('required')) {
+            <mat-error i18n>Street address is required.</mat-error>
+          }
+        </mat-form-field>
+        <div class="form-actions">
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="checkoutForm.invalid || isLoading()"
+          >
+            @if (isLoading()) {
+              <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
+            } @else {
+              <span i18n>Checkout</span>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title i18n>Checkout Successful</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p i18n>Your order has been placed successfully!</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-flat-button color="primary" (click)="continueShoppingClicked.emit()">
+        <span i18n>Continue Shopping</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+}
