@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { CartItem } from '../../../../types/cart-item.types';
+import { EnrichedCartItem } from '../../../../types/cart-item.types';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class ShoppingCartDetailsView {
   totalPrice = input.required<number>();
   totalItems = input.required<number>();
-  items = input.required<CartItem[]>();
+  items = input.required<EnrichedCartItem[]>();
 
   quantityChanged = output<{ productId: string; rawValue: string }>();
   itemRemoved = output<string>();
