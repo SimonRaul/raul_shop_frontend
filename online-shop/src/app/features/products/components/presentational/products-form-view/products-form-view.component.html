@@ -1,6 +1,6 @@
 <mat-card class="product-form-card">
   <mat-card-header>
-    <mat-card-title>Product Form</mat-card-title>
+    <mat-card-title i18n>Product Form</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
@@ -15,7 +15,7 @@
           placeholder="E.g., Wireless Mouse"
         />
         @if (productForm().controls.name.hasError('required')) {
-          <mat-error>Name is required.</mat-error>
+          <mat-error i18n>Name is required.</mat-error>
         }
       </mat-form-field>
 
@@ -44,13 +44,13 @@
             class="example-left-align"
             placeholder="0"
           />
-          <span matTextSuffix>Lei</span>
+          <span matTextSuffix i18n>Lei</span>
 
           @if (productForm().controls.price.hasError('required')) {
             <mat-error i18n>Price is required.</mat-error>
           }
           @if (productForm().controls.price.hasError('min')) {
-            <mat-error>Price must be greater than 0.</mat-error>
+            <mat-error i18n>Price must be greater than 0.</mat-error>
           }
           @if (productForm().controls.price.hasError('pattern')) {
             <mat-error i18n>Price must be a valid number.</mat-error>
@@ -67,7 +67,7 @@
             class="example-left-align"
             placeholder="0"
           />
-          <span matTextSuffix>Kg</span>
+          <span matTextSuffix i18n>Kg</span>
 
           @if (productForm().controls.weight.hasError('required')) {
             <mat-error i18n>Weight is required.</mat-error>
