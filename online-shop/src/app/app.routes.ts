@@ -18,6 +18,11 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'products/new',
+    component: ProductsFormComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
     path: 'products/:id',
     component: ProductDetailsComponent,
     canActivate: [authGuard],
@@ -39,11 +44,6 @@ export const routes: Routes = [
   },
   {
     path: 'products/:id/edit',
-    component: ProductsFormComponent,
-    canActivate: [authGuard, adminGuard],
-  },
-  {
-    path: 'products/new',
     component: ProductsFormComponent,
     canActivate: [authGuard, adminGuard],
   },
