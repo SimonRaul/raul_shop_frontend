@@ -2,14 +2,14 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners, isDevMode } from
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './interceptors/auth-interceptor';
-import { tokenInterceptor } from './interceptors/token-interceptor';
+import { authInterceptor } from './core/interceptors/auth-interceptor';
+import { tokenInterceptor } from './core/interceptors/token-interceptor';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { authFeature } from './core/state/auth/auth.reducers';
+import { authFeature } from './features/auth/state/auth.reducers';
 import { productsFeature } from './features/products/state/products.reducers';
-import { AuthEffects } from './core/state/auth/auth.effects';
+import { AuthEffects } from './features/auth/state/auth.effects';
 import { ProductsEffects } from './features/products/state/products.effects';
 
 export const appConfig: ApplicationConfig = {

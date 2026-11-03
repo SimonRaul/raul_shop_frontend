@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ProductsService } from '../../../services/products.service';
-import { ProductCategoryService } from '../../../services/product-category.service';
+import { ProductsService } from '../services/products.service';
+import { ProductCategoryService } from '../services/product-category.service';
 import { Router } from '@angular/router';
 import { CategoryActions, ProductActions } from './products.actions';
 import { catchError, concatMap, map, of, switchMap, tap } from 'rxjs';

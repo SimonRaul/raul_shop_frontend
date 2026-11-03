@@ -1,6 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { CreateProductRequest, Product } from '../../shared/types/products.types';
-import { Category } from '../../shared/types/product-category.types';
+import { CreateProductRequest, Product } from '../types/products.types';
+import { Category } from '../types/product-category.types';
 
 export const ProductActions = createActionGroup({
   source: 'Product',

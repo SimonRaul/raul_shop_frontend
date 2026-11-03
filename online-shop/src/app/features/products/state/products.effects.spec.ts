@@ -2,11 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { Actions } from '@ngrx/effects';
 import { Router } from '@angular/router';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
-import { ProductCategoryService } from '../../../services/product-category.service';
-import { ProductsService } from '../../../services/products.service';
+import { ProductCategoryService } from '../services/product-category.service';
+import { ProductsService } from '../services/products.service';
 import { CategoryActions, ProductActions } from './products.actions';
 import { ProductsEffects } from './products.effects';
-import { Product } from '../../shared/types/products.types';
+import { Product } from '../types/products.types';
 
 describe('ProductsEffects', () => {
   let actions$: Subject<unknown>;

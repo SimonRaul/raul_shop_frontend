@@ -5,10 +5,10 @@ import { provideRouter, Router, Routes } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideState, provideStore, Store } from '@ngrx/store';
 import { routes } from './app.routes';
-import { AuthActions } from './core/state/auth/auth.actions';
-import { authFeature } from './core/state/auth/auth.reducers';
-import { User, UserRole } from './features/shared/types/users.types';
-import { AuthService } from './services/auth.service';
+import { AuthActions } from './features/auth/state/auth.actions';
+import { authFeature } from './features/auth/state/auth.reducers';
+import { User, UserRole } from './features/user/types/users.types';
+import { AuthService } from './features/auth/services/auth.service';
 
 @Component({ selector: 'app-stub-product-list', template: 'product list' })
 class ProductListStubComponent {}

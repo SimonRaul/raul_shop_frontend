@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { PageHeaderViewComponent } from '../../presentational/page-header-view/page-header-view.component';
 import { Store } from '@ngrx/store';
-import { selectAuthState } from '../../../../../core/state/auth/auth.reducers';
-import { AuthActions } from '../../../../../core/state/auth/auth.actions';
+import { selectAuthState } from '../../../../auth/state/auth.reducers';
+import { AuthActions } from '../../../../auth/state/auth.actions';
 
 @Component({
   imports: [PageHeaderViewComponent],
@@ -15,8 +15,8 @@ import { AuthActions } from '../../../../../core/state/auth/auth.actions';
   ></app-page-header-view>`,
 })
 export class PageHeaderComponent {
-  private store = inject(Store);
-  private authState = this.store.selectSignal(selectAuthState);
+  private readonly store = inject(Store);
+  private readonly authState = this.store.selectSignal(selectAuthState);
   currentUser = computed(() => this.authState().user);
   isLoggedIn = computed(() => this.currentUser() !== null);
 

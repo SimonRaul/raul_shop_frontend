@@ -1,5 +1,5 @@
-import { Product } from '../../shared/types/products.types';
-import { Category } from '../../shared/types/product-category.types';
+import { Product } from '../types/products.types';
+import { Category } from '../types/product-category.types';
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { CategoryActions, ProductActions } from './products.actions';
 

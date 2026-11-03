@@ -2,9 +2,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PageHeaderComponent } from './features/shared/components/containers/page-header/page-header.component';
 import { Store } from '@ngrx/store';
-import { AuthService } from './services/auth.service';
-import { AuthActions } from './core/state/auth/auth.actions';
-import { selectIsInitialized, selectIsLoading } from './core/state/auth/auth.reducers';
+import { AuthService } from './features/auth/services/auth.service';
+import { AuthActions } from './features/auth/state/auth.actions';
+import { selectIsInitialized, selectIsLoading } from './features/auth/state/auth.reducers';
 
 @Component({
   imports: [RouterOutlet, PageHeaderComponent],

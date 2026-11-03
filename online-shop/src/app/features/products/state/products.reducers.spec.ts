@@ -1,7 +1,7 @@
 import { CategoryActions, ProductActions } from './products.actions';
 import { ProductsState, reducer } from './products.reducers';
-import { Category } from '../../shared/types/product-category.types';
-import { Product } from '../../shared/types/products.types';
+import { Category } from '../types/product-category.types';
+import { Product } from '../types/products.types';
 
 describe('productsReducer', () => {
   const product: Product = {

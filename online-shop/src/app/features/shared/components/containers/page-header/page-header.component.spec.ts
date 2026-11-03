@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectAuthState } from '../../../../../core/state/auth/auth.reducers';
-import { User } from '../../../types/users.types';
+import { selectAuthState } from '../../../../auth/state/auth.reducers';
+import { User } from '../../../../user/types/users.types';
 import { PageHeaderComponent } from './page-header.component';
 
 describe('PageHeaderComponent', () => {

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { PageHeaderViewComponent } from './page-header-view.component';
-import { User } from '../../../types/users.types';
+import { User } from '../../../../user/types/users.types';
 
 describe('PageHeaderViewComponent', () => {
   let component: PageHeaderViewComponent;
