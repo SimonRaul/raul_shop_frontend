@@ -9,6 +9,7 @@ import { LoginFormComponent } from './components/containers/login-form/login-for
 import { ProductDetailsComponent } from './components/containers/product-details/product-details.component';
 import { ProfileComponent } from './features/shared/components/containers/profile/profile.component';
 import { CheckoutPageComponent } from './features/shared/components/containers/checkout-page/checkout-page.component';
+import { NotFoundPageViewComponent } from './features/shared/components/presentational/not-found-page-view/not-found-page-view.component';
 
 export const routes: Routes = [
   {
@@ -58,6 +59,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'products',
+    component: NotFoundPageViewComponent,
   },
 ];
