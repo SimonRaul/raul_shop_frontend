@@ -10,7 +10,7 @@
       "i18n": {
         "sourceLocale": "en-US",
         "locales": {
-          "ro-RO": "src/locale/messages.ro.json"
+          "ro": "src/locale/messages.ro.json"
         }
       },
       "projectType": "application",
@@ -26,7 +26,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "localize": ["ro-RO"],
+            "localize": ["ro"],
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",

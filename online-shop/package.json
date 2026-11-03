@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:i18n": "ng build --localize",
+    "extract-i18n": "ng extract-i18n --format=json --output-path=src/locale",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "format": "prettier --write \"src/**/*.{js,ts,html,scss,json}\""

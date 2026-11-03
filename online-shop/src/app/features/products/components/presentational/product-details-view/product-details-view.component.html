@@ -7,13 +7,15 @@
 
       <mat-card-title-group>
         <mat-card-title>{{ product.name }}</mat-card-title>
-        <mat-card-subtitle i18n>Price: {{ product.price }} RON</mat-card-subtitle>
+        <mat-card-subtitle i18n="@@products.details.price">
+          Price: {{ product.price }} RON
+        </mat-card-subtitle>
       </mat-card-title-group>
     </mat-card-header>
 
     <mat-card-content>
       <div class="item-category">
-        <h3 i18n>Category: {{ product.category }}</h3>
+        <h3 i18n="@@products.details.category">Category: {{ product.category }}</h3>
         <p>{{ product.categoryDescription }}</p>
       </div>
 
@@ -22,7 +24,7 @@
       </div>
 
       <div class="item-weight">
-        <p i18n>Weight: {{ product.weight }} kg</p>
+        <p i18n="@@products.details.weight">Weight: {{ product.weight }} kg</p>
       </div>
     </mat-card-content>
 
@@ -32,15 +34,25 @@
           mat-stroked-button
           color="primary"
           (click)="updateProductClicked.emit(product.id)"
-          i18n
+          i18n="@@products.details.edit"
         >
           Edit
         </button>
-        <button mat-stroked-button class="btn-delete-mat" (click)="showDeleteConfirmation()" i18n>
+        <button
+          mat-stroked-button
+          class="btn-delete-mat"
+          (click)="showDeleteConfirmation()"
+          i18n="@@products.details.delete"
+        >
           Delete
         </button>
       }
-      <button mat-flat-button color="primary" (click)="addToCartClicked.emit(product)" i18n>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="addToCartClicked.emit(product)"
+        i18n="@@products.details.addToCart"
+      >
         Add to Cart
       </button>
     </mat-card-actions>

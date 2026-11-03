@@ -1,9 +1,14 @@
 <div class="page-header">
-  <h1 class="page-title" i18n>Products List</h1>
+  <h1 class="page-title" i18n="@@products.list.title">Products List</h1>
 
   @if (isAdmin()) {
     <div class="page-action">
-      <button mat-flat-button color="primary" (click)="addProductClicked.emit()" i18n>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="addProductClicked.emit()"
+        i18n="@@products.list.add"
+      >
         Add Product
       </button>
     </div>
@@ -11,14 +16,21 @@
 </div>
 
 @if (isLoading()) {
-  <output class="list-state" i18n>Loading products...</output>
+  <output class="list-state" i18n="@@products.list.loading">Loading products...</output>
 } @else if (error(); as errorMessage) {
   <div class="list-state" role="alert">
-    <p i18n>Unable to load products: {{ errorMessage }}</p>
-    <button mat-flat-button color="primary" (click)="retryClicked.emit()" i18n>Retry</button>
+    <p i18n="@@products.list.loadError">Unable to load products: {{ errorMessage }}</p>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="retryClicked.emit()"
+      i18n="@@products.list.retry"
+    >
+      Retry
+    </button>
   </div>
 } @else if (products().length === 0) {
-  <p class="list-state" i18n>No products available.</p>
+  <p class="list-state" i18n="@@products.list.empty">No products available.</p>
 } @else {
   <div class="table-container mat-elevation-z8">
     <table mat-table [dataSource]="products()" class="products-table">
@@ -30,19 +42,24 @@
       </ng-container>
 
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef i18n>Name</th>
+        <th mat-header-cell *matHeaderCellDef i18n="@@products.list.name">Name</th>
         <td mat-cell *matCellDef="let product">{{ product.name }}</td>
       </ng-container>
 
       <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef i18n>Price</th>
+        <th mat-header-cell *matHeaderCellDef i18n="@@products.list.price">Price</th>
         <td mat-cell *matCellDef="let product">{{ product.price }} RON</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef i18n>Actions</th>
+        <th mat-header-cell *matHeaderCellDef i18n="@@products.list.actions">Actions</th>
         <td mat-cell *matCellDef="let product">
-          <button mat-flat-button color="primary" (click)="productClicked.emit(product.id)" i18n>
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="productClicked.emit(product.id)"
+            i18n="@@products.list.viewDetails"
+          >
             View Details
           </button>
         </td>
