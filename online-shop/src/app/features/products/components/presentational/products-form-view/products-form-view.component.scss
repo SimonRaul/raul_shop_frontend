@@ -1,0 +1,84 @@
+:host {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.product-form-card {
+  width: 100%;
+  max-width: 650px;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+mat-card-header {
+  margin-bottom: 2.5rem;
+  justify-content: center;
+}
+
+mat-card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+
+  .half-width {
+    flex: 1;
+  }
+
+  input.example-left-align::-webkit-outer-spin-button,
+  input.example-left-align::-webkit-inner-spin-button {
+    display: none;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    min-width: 250px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .product-form-card {
+    padding: 0.5rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}

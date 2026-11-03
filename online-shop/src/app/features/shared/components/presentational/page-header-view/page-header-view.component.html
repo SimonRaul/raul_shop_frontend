@@ -1,0 +1,31 @@
+<mat-toolbar>
+  <a routerLink="/" class="logo">MyStore</a>
+
+  @if (isLoggedIn()) {
+    <div class="nav-links">
+      <a mat-button routerLink="/products" routerLinkActive="active-link">Products</a>
+    </div>
+  }
+
+  <span class="spacer"></span>
+
+  <div class="auth-actions">
+    <a mat-icon-button routerLink="/shopping-cart" routerLinkActive="active-link">
+      <mat-icon>shopping_cart</mat-icon>
+    </a>
+    @if (isLoggedIn()) {
+      <button mat-button routerLink="/profile" class="profile-btn">
+        <span class="username">{{ currentUser()?.firstName }}</span>
+        <mat-icon>account_circle</mat-icon>
+      </button>
+
+      <button mat-icon-button (click)="logoutClicked.emit()">
+        <mat-icon>logout</mat-icon>
+      </button>
+    } @else {
+      <button mat-icon-button routerLink="/login">
+        <mat-icon>login</mat-icon>
+      </button>
+    }
+  </div>
+</mat-toolbar>

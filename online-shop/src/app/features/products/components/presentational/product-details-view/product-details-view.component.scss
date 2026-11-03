@@ -1,0 +1,146 @@
+:host {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+mat-card.product-details-card {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+  border-radius: 16px;
+}
+
+mat-card-header {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: center;
+  padding: 0;
+  margin-bottom: 2rem;
+}
+
+.product-image {
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    max-width: 250px;
+    height: 250px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+mat-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+mat-card-title {
+  justify-content: flex-start;
+  font-size: 2.2rem;
+  color: var(--text-main);
+  white-space: normal;
+  line-height: 1.2;
+  margin: 0;
+}
+
+mat-card-subtitle {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 0;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.item-category {
+  background-color: rgba(74, 124, 89, 0.08);
+  padding: 1.25rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+
+  h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    color: var(--primary-color);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-main);
+  }
+}
+
+.item-description p {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+.item-weight p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--primary-color);
+}
+
+mat-card-actions.product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1.5rem 0 0 0;
+  border-top: 1px solid var(--border-color);
+
+  button:last-child {
+    margin-left: auto;
+  }
+}
+
+.btn-delete-mat {
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+
+  &:hover {
+    background-color: rgba(184, 18, 18, 0.04);
+  }
+}
+
+@media (max-width: 768px) {
+  mat-card.product-details-card {
+    padding: 1.5rem;
+  }
+
+  mat-card-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .product-image img {
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  mat-card-actions.product-actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+}

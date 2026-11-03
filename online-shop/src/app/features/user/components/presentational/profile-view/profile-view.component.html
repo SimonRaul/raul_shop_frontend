@@ -1,0 +1,43 @@
+<div class="page-header">
+  <h1 class="page-title">Your Profile</h1>
+</div>
+
+@if (isLoading()) {
+  <mat-spinner diameter="50"></mat-spinner>
+}
+
+@if (currentUser(); as user) {
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar class="avatar-initials">
+        {{ user.firstName?.charAt(0) | uppercase }}{{ user.lastName?.charAt(0) | uppercase }}
+      </div>
+      <mat-card-title>{{ user.firstName }} {{ user.lastName }}</mat-card-title>
+      <mat-card-subtitle>Account Details</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="info-group">
+        <span class="label">First Name</span>
+        <span class="value">{{ user.firstName }}</span>
+      </div>
+
+      <div class="info-group">
+        <span class="label">Last Name</span>
+        <span class="value">{{ user.lastName }}</span>
+      </div>
+
+      <div class="info-group">
+        <span class="label">Email</span>
+        <span class="value">{{ user.email }}</span>
+      </div>
+
+      <div class="info-group">
+        <span class="label">Username</span>
+        <span class="value">{{ user.username }}</span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <mat-error>No user data available.</mat-error>
+}
