@@ -11,7 +11,7 @@
 </div>
 
 @if (isLoading()) {
-  <output class="list-state" role="status">Loading products...</output>
+  <output class="list-state">Loading products...</output>
 } @else if (error(); as errorMessage) {
   <div class="list-state" role="alert">
     <p>Unable to load products: {{ errorMessage }}</p>
