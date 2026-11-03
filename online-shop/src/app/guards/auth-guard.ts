@@ -17,9 +17,13 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
+  const loginRedirect = router.createUrlTree(['/login'], {
+    queryParams: { returnUrl: state.url },
+  });
+
   if (!authService.hasValidSession()) {
     store.dispatch(AuthActions.sessionInvalid());
-    return router.createUrlTree(['/login']);
+    return loginRedirect;
   }
 
   if (!authState.isLoading) {
@@ -29,6 +33,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   return store.select(selectAuthState).pipe(
     filter((auth) => auth.isInitialized && !auth.isLoading),
     take(1),
-    map((auth) => (auth.user ? true : router.createUrlTree(['/login']))),
+    map((auth) => (auth.user ? true : loginRedirect)),
   );
 };

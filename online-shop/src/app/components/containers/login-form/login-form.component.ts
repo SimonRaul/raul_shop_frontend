@@ -1,9 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { UserLoginRequest } from '../../../features/shared/types/users.types';
 import { LoginFormViewComponent } from '../../presentational/login-form-view/login-form-view.component';
 import { Store } from '@ngrx/store';
 import { selectAuthState } from '../../../core/state/auth/auth.reducers';
 import { AuthActions } from '../../../core/state/auth/auth.actions';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   imports: [LoginFormViewComponent],
@@ -14,10 +22,26 @@ import { AuthActions } from '../../../core/state/auth/auth.actions';
     (submittedClicked)="onLogin($event)"
   ></app-login-form-view>`,
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly authState = this.store.selectSignal(selectAuthState);
   errorMessage = computed(() => this.authState().error);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private returnUrl = '/products';
+
+  constructor() {
+    effect(() => {
+      const user = this.authState().user;
+      if (user) {
+        this.router.navigateByUrl(this.returnUrl);
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/products';
+  }
 
   onLogin(formData: UserLoginRequest) {
     this.store.dispatch(AuthActions.login({ request: formData }));
