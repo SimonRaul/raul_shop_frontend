@@ -1,7 +1,12 @@
-import { CategoryActions, ProductActions } from './products.actions';
-import { ProductsState, reducer } from './products.reducers';
-import { Category } from '../types/product-category.types';
 import { Product } from '../types/products.types';
+import { ProductActions } from './products.actions';
+import {
+  initialProductsState,
+  productsAdapter,
+  reducer,
+  selectProductList,
+  selectSelectedProduct,
+} from './products.reducers';
 
 describe('productsReducer', () => {
   const product: Product = {
@@ -15,118 +20,107 @@ describe('productsReducer', () => {
     imageUrl: 'chair.jpg',
   };
   const replacementProduct = { ...product, name: 'Updated chair', price: 30 };
-  const category: Category = {
-    id: 'category-1',
-    name: 'Furniture',
-    description: 'Furniture products',
-  };
 
-  let initialState: ProductsState;
-
-  beforeEach(() => {
-    initialState = reducer(undefined, { type: '@@init' });
-  });
-
-  it('returns the initial state', () => {
-    expect(initialState).toEqual({
-      products: {
-        list: [],
-        selectedProduct: null,
-        isLoading: false,
-        error: null,
-      },
-      categories: {
-        list: [],
-        isLoading: false,
-        error: null,
-      },
+  it('returns the normalized initial state', () => {
+    expect(reducer(undefined, { type: '@@init' })).toEqual({
+      ids: [],
+      entities: {},
+      selectedProductId: null,
+      isLoading: false,
+      error: null,
     });
   });
 
-  it('loads products and handles product errors', () => {
-    let state = reducer(initialState, ProductActions.loadProducts());
-    expect(state.products).toMatchObject({ isLoading: true, error: null });
+  it('loads products without discarding existing entities while pending or failing', () => {
+    const populatedState = productsAdapter.setOne(product, initialProductsState);
 
-    state = reducer(state, ProductActions.loadProductsSuccess({ products: [product] }));
-    expect(state.products).toMatchObject({ list: [product], isLoading: false });
-
-    state = reducer(state, ProductActions.loadProductsFailure({ error: 'Unable to load' }));
-    expect(state.products).toMatchObject({ isLoading: false, error: 'Unable to load' });
-  });
-
-  it('loads, replaces, and clears a selected product', () => {
-    let state = reducer(initialState, ProductActions.loadSingleProduct({ productId: product.id }));
-    expect(state.products).toMatchObject({
-      selectedProduct: null,
+    let state = reducer(populatedState, ProductActions.loadProducts());
+    expect(state).toMatchObject({
+      ids: [product.id],
       isLoading: true,
       error: null,
     });
 
-    state = reducer(state, ProductActions.loadSingleProductSuccess({ product }));
-    expect(state.products).toMatchObject({ selectedProduct: product, isLoading: false });
-
-    state = reducer(state, ProductActions.loadSingleProductFailure({ error: 'Not found' }));
-    expect(state.products).toMatchObject({
-      selectedProduct: null,
+    state = reducer(state, ProductActions.loadProductsFailure({ error: 'Unable to load' }));
+    expect(state).toMatchObject({
+      ids: [product.id],
       isLoading: false,
-      error: 'Not found',
+      error: 'Unable to load',
     });
 
-    state = reducer(
-      { ...initialState, products: { ...initialState.products, selectedProduct: product } },
-      ProductActions.clearSelectedProduct(),
-    );
-    expect(state.products).toMatchObject({ selectedProduct: null, error: null });
-  });
-
-  it('adds, updates, and deletes products', () => {
-    let state = reducer(
-      { ...initialState, products: { ...initialState.products, list: [product] } },
-      ProductActions.addProduct({
-        product: {
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          weight: product.weight,
-          categoryId: 'category-1',
-          imageUrl: product.imageUrl,
-        },
-      }),
-    );
-    expect(state.products).toMatchObject({ isLoading: true, error: null });
-
-    state = reducer(state, ProductActions.addProductSuccess({ product }));
-    expect(state.products).toMatchObject({
-      list: [product, product],
-      selectedProduct: product,
+    state = reducer(state, ProductActions.loadProductsSuccess({ products: [replacementProduct] }));
+    expect(state).toMatchObject({
+      ids: [product.id],
+      entities: { [product.id]: replacementProduct },
       isLoading: false,
       error: null,
     });
+  });
+
+  it('upserts and selects a loaded product without replacing the collection', () => {
+    const otherProduct = { ...product, id: 'product-2', name: 'Table' };
+    let state = productsAdapter.setOne(otherProduct, initialProductsState);
+
+    state = reducer(state, ProductActions.loadSingleProduct({ productId: product.id }));
+    expect(state).toMatchObject({
+      ids: [otherProduct.id],
+      selectedProductId: null,
+      isLoading: true,
+    });
+
+    state = reducer(state, ProductActions.loadSingleProductSuccess({ product }));
+    expect(state.ids).toEqual([otherProduct.id, product.id]);
+    expect(state.selectedProductId).toBe(product.id);
+
+    state = reducer(state, ProductActions.clearSelectedProduct());
+    expect(state.ids).toEqual([otherProduct.id, product.id]);
+    expect(state.selectedProductId).toBeNull();
+  });
+
+  it('adds, updates, and deletes products through the adapter', () => {
+    let state = reducer(
+      initialProductsState,
+      ProductActions.addProductSuccess({ product }),
+    );
+    expect(state.entities[product.id]).toEqual(product);
+    expect(state.selectedProductId).toBe(product.id);
 
     state = reducer(state, ProductActions.updateProductSuccess({ product: replacementProduct }));
-    expect(state.products.list).toEqual([replacementProduct, replacementProduct]);
-    expect(state.products.selectedProduct).toEqual(replacementProduct);
+    expect(state.entities[product.id]).toEqual(replacementProduct);
 
     state = reducer(state, ProductActions.deleteProductSuccess({ productId: product.id }));
-    expect(state.products).toMatchObject({
-      list: [],
-      selectedProduct: null,
+    expect(state).toMatchObject({
+      ids: [],
+      entities: {},
+      selectedProductId: null,
       isLoading: false,
       error: null,
     });
-
-    state = reducer(state, ProductActions.addProductFailure({ error: 'Save failed' }));
-    expect(state.products).toMatchObject({ isLoading: false, error: 'Save failed' });
   });
 
-  it('updates category loading, success, and failure state', () => {
-    let state = reducer(initialState, CategoryActions.loadCategories());
-    expect(state.categories).toMatchObject({ isLoading: true, error: null });
+  it('preserves entities when a product mutation fails', () => {
+    const populatedState = productsAdapter.setOne(product, initialProductsState);
+    const pendingState = reducer(
+      populatedState,
+      ProductActions.deleteProduct({ productId: product.id }),
+    );
+    const failedState = reducer(
+      pendingState,
+      ProductActions.deleteProductFailure({ error: 'Delete failed' }),
+    );
 
-    state = reducer(state, CategoryActions.loadCategoriesSuccess({ categories: [category] }));
-    expect(state.categories).toMatchObject({ list: [category], isLoading: false });
+    expect(failedState.entities[product.id]).toEqual(product);
+    expect(failedState).toMatchObject({ isLoading: false, error: 'Delete failed' });
+  });
 
-    state = reducer(state, CategoryActions.loadCategoriesFailure({ error: 'Unable to load' }));
-    expect(state.categories).toMatchObject({ isLoading: false, error: 'Unable to load' });
+  it('denormalizes the list and selected product through selectors', () => {
+    const state = productsAdapter.setOne(product, {
+      ...initialProductsState,
+      selectedProductId: product.id,
+    });
+    const rootState = { products: state };
+
+    expect(selectProductList(rootState)).toEqual([product]);
+    expect(selectSelectedProduct(rootState)).toEqual(product);
   });
 });

@@ -5,10 +5,10 @@ import { Store } from '@ngrx/store';
 import { ProductsFormComponent } from './products-form.component';
 import { CategoryActions, ProductActions } from '../../../state/products.actions';
 import {
-  selectCategories,
   selectProductsLoading,
   selectSelectedProduct,
 } from '../../../state/products.reducers';
+import { selectCategoryList } from '../../../state/categories.reducers';
 import { CreateProductRequest, Product } from '../../../types/products.types';
 
 describe('ProductsFormComponent', () => {
@@ -17,11 +17,7 @@ describe('ProductsFormComponent', () => {
   let dispatch: ReturnType<typeof vi.fn>;
   let navigate: ReturnType<typeof vi.fn>;
   let routeId: string | null;
-  const categoriesState = signal({
-    list: [{ id: 'cat-1', name: 'Books' }],
-    isLoading: false,
-    error: null,
-  });
+  const categories = signal([{ id: 'cat-1', name: 'Books', description: 'Books' }]);
   const productsState = signal<{ list: Product[]; selectedProduct: Product | null }>({
     list: [],
     selectedProduct: null,
@@ -50,7 +46,7 @@ describe('ProductsFormComponent', () => {
     routeId = null;
     dispatch = vi.fn();
     navigate = vi.fn();
-    categoriesState.set({ list: [{ id: 'cat-1', name: 'Books' }], isLoading: false, error: null });
+    categories.set([{ id: 'cat-1', name: 'Books', description: 'Books' }]);
     productsState.set({ list: [], selectedProduct: null });
 
     await TestBed.configureTestingModule({
@@ -61,8 +57,8 @@ describe('ProductsFormComponent', () => {
           useValue: {
             dispatch,
             selectSignal: (selector: unknown) => {
-              if (selector === selectCategories) {
-                return categoriesState;
+              if (selector === selectCategoryList) {
+                return categories;
               }
               if (selector === selectSelectedProduct) {
                 return computed(() => productsState().selectedProduct);
@@ -91,7 +87,7 @@ describe('ProductsFormComponent', () => {
   it('should expose categories and the selected product from store state', () => {
     productsState.set({ list: [], selectedProduct: product });
 
-    expect(component.categoriesList()).toEqual(categoriesState().list);
+    expect(component.categoriesList()).toEqual(categories());
     expect(component.productToEdit()).toEqual(product);
   });
 
