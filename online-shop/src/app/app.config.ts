@@ -9,8 +9,11 @@ import { provideState, provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { authFeature } from './features/auth/state/auth.reducers';
 import { productsFeature } from './features/products/state/products.reducers';
+import { categoriesFeature } from './features/products/state/categories.reducers';
 import { AuthEffects } from './features/auth/state/auth.effects';
 import { ProductsEffects } from './features/products/state/products.effects';
+import { cartFeature } from './features/shopping-cart/state/shopping-cart.reducers';
+import { ShoppingCartEffects } from './features/shopping-cart/state/shopping-cart.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +23,9 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     provideState(authFeature),
     provideState(productsFeature),
-    provideEffects([AuthEffects, ProductsEffects]),
+    provideState(categoriesFeature),
+    provideState(cartFeature),
+    provideEffects([AuthEffects, ProductsEffects, ShoppingCartEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), name: 'Online-Shop-App' }),
   ],
 };

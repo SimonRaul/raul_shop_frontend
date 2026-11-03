@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ProductsFormViewComponent } from '../../presentational/products-form-view/products-form-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateProductRequest } from '../../../types/products.types';
 import { Store } from '@ngrx/store';
 import {
-  selectCategories,
   selectProductsLoading,
   selectSelectedProduct,
 } from '../../../state/products.reducers';
+import { selectCategoryList } from '../../../state/categories.reducers';
 import { CategoryActions, ProductActions } from '../../../state/products.actions';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ProductForm } from '../../../types/product-form.types';
@@ -29,8 +29,7 @@ export class ProductsFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly categoriesState = this.store.selectSignal(selectCategories);
-  readonly categoriesList = computed(() => this.categoriesState().list);
+  readonly categoriesList = this.store.selectSignal(selectCategoryList);
   readonly productToEdit = this.store.selectSignal(selectSelectedProduct);
   readonly isLoading = this.store.selectSignal(selectProductsLoading);
   private readonly formBuilder = inject(FormBuilder);

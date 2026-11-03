@@ -7,6 +7,12 @@
   "newProjectRoot": "projects",
   "projects": {
     "online-shop": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "ro": "src/locale/messages.ro.json"
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,6 +26,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "localize": ["ro"],
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -29,7 +36,8 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss"],
+            "polyfills": ["@angular/localize/init"]
           },
           "configurations": {
             "production": {

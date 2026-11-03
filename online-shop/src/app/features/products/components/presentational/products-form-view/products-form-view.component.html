@@ -1,41 +1,45 @@
 <mat-card class="product-form-card">
   <mat-card-header>
-    <mat-card-title>Product Form</mat-card-title>
+    <mat-card-title i18n="@@products.form.title">Product Form</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
     <form [formGroup]="productForm()" (ngSubmit)="onSubmit()" class="product-form">
       <mat-form-field>
-        <mat-label>Name</mat-label>
+        <mat-label i18n="@@products.form.name.label">Name</mat-label>
         <input
           matInput
           id="name"
           type="text"
           formControlName="name"
           placeholder="E.g., Wireless Mouse"
+          i18n-placeholder="@@products.form.name.placeholder"
         />
         @if (productForm().controls.name.hasError('required')) {
-          <mat-error>Name is required.</mat-error>
+          <mat-error i18n="@@products.form.name.required">Name is required.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Description</mat-label>
+        <mat-label i18n="@@products.form.description.label">Description</mat-label>
         <textarea
           matInput
           id="description"
           formControlName="description"
           placeholder="Enter product details..."
+          i18n-placeholder="@@products.form.description.placeholder"
           rows="3"
         ></textarea>
         @if (productForm().controls.description.hasError('required')) {
-          <mat-error>Description is required.</mat-error>
+          <mat-error i18n="@@products.form.description.required">
+            Description is required.
+          </mat-error>
         }
       </mat-form-field>
 
       <div class="form-row">
         <mat-form-field class="half-width">
-          <mat-label>Price</mat-label>
+          <mat-label i18n="@@products.form.price.label">Price</mat-label>
           <input
             matInput
             id="price"
@@ -44,21 +48,23 @@
             class="example-left-align"
             placeholder="0"
           />
-          <span matTextSuffix>Lei</span>
+          <span matTextSuffix i18n="@@products.form.price.currency">Lei</span>
 
           @if (productForm().controls.price.hasError('required')) {
-            <mat-error>Price is required.</mat-error>
+            <mat-error i18n="@@products.form.price.required">Price is required.</mat-error>
           }
           @if (productForm().controls.price.hasError('min')) {
-            <mat-error>Price must be greater than 0.</mat-error>
+            <mat-error i18n="@@products.form.price.min"> Price must be greater than 0. </mat-error>
           }
           @if (productForm().controls.price.hasError('pattern')) {
-            <mat-error>Price must be a valid number.</mat-error>
+            <mat-error i18n="@@products.form.price.pattern">
+              Price must be a valid number.
+            </mat-error>
           }
         </mat-form-field>
 
         <mat-form-field class="half-width">
-          <mat-label>Weight</mat-label>
+          <mat-label i18n="@@products.form.weight.label">Weight</mat-label>
           <input
             matInput
             id="weight"
@@ -67,34 +73,41 @@
             class="example-left-align"
             placeholder="0"
           />
-          <span matTextSuffix>Kg</span>
+          <span matTextSuffix i18n="@@products.form.weight.unit">Kg</span>
 
           @if (productForm().controls.weight.hasError('required')) {
-            <mat-error>Weight is required.</mat-error>
+            <mat-error i18n="@@products.form.weight.required">Weight is required.</mat-error>
           }
           @if (productForm().controls.weight.hasError('min')) {
-            <mat-error>Weight cannot be negative.</mat-error>
+            <mat-error i18n="@@products.form.weight.min"> Weight cannot be negative. </mat-error>
           }
           @if (productForm().controls.weight.hasError('pattern')) {
-            <mat-error>Weight must be a valid number.</mat-error>
+            <mat-error i18n="@@products.form.weight.pattern">
+              Weight must be a valid number.
+            </mat-error>
           }
         </mat-form-field>
       </div>
 
       <mat-form-field>
-        <mat-label>Category</mat-label>
-        <mat-select id="categoryId" formControlName="categoryId" placeholder="Select a category">
+        <mat-label i18n="@@products.form.category.label">Category</mat-label>
+        <mat-select
+          id="categoryId"
+          formControlName="categoryId"
+          placeholder="Select a category"
+          i18n-placeholder="@@products.form.category.placeholder"
+        >
           @for (category of categories(); track category.id) {
             <mat-option [value]="category.id">{{ category.name }}</mat-option>
           }
         </mat-select>
         @if (productForm().controls.categoryId.hasError('required')) {
-          <mat-error>Category is required.</mat-error>
+          <mat-error i18n="@@products.form.category.required"> Category is required. </mat-error>
         }
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Image URL</mat-label>
+        <mat-label i18n="@@products.form.imageUrl.label">Image URL</mat-label>
         <input
           matInput
           id="imageUrl"
@@ -103,7 +116,7 @@
           placeholder="https://..."
         />
         @if (productForm().controls.imageUrl.hasError('required')) {
-          <mat-error>Image URL is required.</mat-error>
+          <mat-error i18n="@@products.form.imageUrl.required"> Image URL is required. </mat-error>
         }
       </mat-form-field>
 
@@ -114,7 +127,7 @@
           (click)="cancelClicked.emit()"
           [disabled]="isLoading()"
         >
-          Cancel
+          <span i18n="@@products.form.cancel">Cancel</span>
         </button>
 
         <button
@@ -126,7 +139,7 @@
           @if (isLoading()) {
             <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
           } @else {
-            Save Product
+            <span i18n="@@products.form.save">Save Product</span>
           }
         </button>
       </div>
