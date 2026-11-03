@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { ProductsFormViewComponent } from '../../presentational/products-form-view/products-form-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateProductRequest } from '../../../features/shared/types/products.types';
@@ -15,6 +8,8 @@ import {
   selectProducts,
 } from '../../../features/products/state/products.reducers';
 import { CategoryActions, ProductActions } from '../../../features/products/state/products.actions';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ProductForm } from '../../../features/shared/types/product-form.types';
 
 @Component({
   imports: [ProductsFormViewComponent],
@@ -23,6 +18,8 @@ import { CategoryActions, ProductActions } from '../../../features/products/stat
   template: `<app-products-form-view
     [categories]="categoriesList()"
     [initialData]="productToEdit()"
+    [isLoading]="isLoading()"
+    [productForm]="productForm"
     (formSubmitted)="onFormSubmitted($event)"
     (cancelClicked)="onCancel()"
   ></app-products-form-view>`,
@@ -33,9 +30,33 @@ export class ProductsFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly categoriesState = this.store.selectSignal(selectCategories);
   private readonly productsState = this.store.selectSignal(selectProducts);
-  categoriesList = computed(() => this.categoriesState().list);
-  productToEdit = computed(() => this.productsState().selectedProduct);
-  isLoading = signal<boolean>(false);
+  readonly categoriesList = computed(() => this.categoriesState().list);
+  readonly productToEdit = computed(() => this.productsState().selectedProduct);
+  readonly isLoading = computed(() => this.productsState().isLoading);
+  private readonly formBuilder = inject(FormBuilder);
+
+  readonly productForm: ProductForm = this.formBuilder.nonNullable.group({
+    name: ['', [Validators.required]],
+    description: ['', [Validators.required]],
+    price: [
+      0,
+      [
+        Validators.required,
+        Validators.min(0.01),
+        Validators.pattern(String.raw`^[0-9]+(\.[0-9]{1,2})?$`),
+      ],
+    ],
+    weight: [
+      0,
+      [
+        Validators.required,
+        Validators.min(0.001),
+        Validators.pattern(String.raw`^[0-9]+(\.[0-9]+)?$`),
+      ],
+    ],
+    categoryId: ['', [Validators.required]],
+    imageUrl: ['', [Validators.required]],
+  });
 
   ngOnInit(): void {
     this.store.dispatch(CategoryActions.loadCategories());
@@ -49,7 +70,6 @@ export class ProductsFormComponent implements OnInit {
   }
 
   onFormSubmitted(formData: CreateProductRequest): void {
-    this.isLoading.set(true);
     const currentProduct = this.productToEdit();
 
     if (currentProduct?.id) {
@@ -59,7 +79,6 @@ export class ProductsFormComponent implements OnInit {
     } else {
       this.store.dispatch(ProductActions.addProduct({ product: formData }));
     }
-    this.isLoading.set(false);
   }
 
   onCancel(): void {
