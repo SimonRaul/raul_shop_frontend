@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 import { ShoppingCartService } from '../../../../shopping-cart/services/shopping-cart.service';
 import { Product } from '../../../../products/types/products.types';
 import { CheckoutPageComponent } from './checkout-page.component';
+import { selectUser } from '../../../../auth/state/auth.reducers';
 
 describe('CheckoutPageComponent', () => {
   let component: CheckoutPageComponent;
@@ -38,14 +39,12 @@ describe('CheckoutPageComponent', () => {
 
   beforeEach(async () => {
     authState = signal({
-      user: {
-        id: 'customer-1',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        email: 'jane@example.com',
-        username: 'jane',
-        role: 'CUSTOMER',
-      },
+      id: 'customer-1',
+      firstName: 'Jane',
+      lastName: 'Doe',
+      email: 'jane@example.com',
+      username: 'jane',
+      role: 'CUSTOMER',
     });
     cartState = signal({
       items: [{ productId: product.id, quantity: 2 }],
@@ -63,7 +62,11 @@ describe('CheckoutPageComponent', () => {
       providers: [
         {
           provide: Store,
-          useValue: { selectSignal: vi.fn(() => authState.asReadonly()) },
+          useValue: {
+            selectSignal: vi.fn((selector: unknown) =>
+              selector === selectUser ? authState.asReadonly() : signal(null),
+            ),
+          },
         },
         { provide: ShoppingCartService, useValue: shoppingCartService },
         { provide: Router, useValue: router },
@@ -81,7 +84,7 @@ describe('CheckoutPageComponent', () => {
   });
 
   it('redirects unauthenticated customers to login', () => {
-    authState.set({ user: null });
+    authState.set(null);
 
     component.onCheckout(address);
 

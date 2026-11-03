@@ -22,12 +22,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './checkout-page-view.component.html',
 })
 export class CheckoutPageViewComponent {
-  checkoutClicked = output<Address>();
+  readonly checkoutClicked = output<Address>();
   private readonly formBuilder = inject(FormBuilder);
-  isCheckedOut = input.required<boolean>();
-  continueShoppingClicked = output<void>();
-  isLoading = input.required<boolean>();
-  errorMessage = input<string | null>(null);
+  readonly isCheckedOut = input.required<boolean>();
+  readonly continueShoppingClicked = output<void>();
+  readonly isLoading = input.required<boolean>();
+  readonly errorMessage = input<string | null>(null);
 
   checkoutForm = this.formBuilder.nonNullable.group({
     country: ['', [Validators.required]],

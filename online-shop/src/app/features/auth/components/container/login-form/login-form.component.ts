@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   effect,
   inject,
   OnInit,
@@ -9,7 +8,7 @@ import {
 import { UserLoginRequest } from '../../../../user/types/users.types';
 import { LoginFormViewComponent } from '../../presentational/login-form-view/login-form-view.component';
 import { Store } from '@ngrx/store';
-import { selectAuthState } from '../../../state/auth.reducers';
+import { selectError, selectUser } from '../../../state/auth.reducers';
 import { AuthActions } from '../../../state/auth.actions';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -24,16 +23,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginFormComponent implements OnInit {
   private readonly store = inject(Store);
-  private readonly authState = this.store.selectSignal(selectAuthState);
-  errorMessage = computed(() => this.authState().error);
+  private readonly user = this.store.selectSignal(selectUser);
+  readonly errorMessage = this.store.selectSignal(selectError);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private returnUrl = '/products';
 
   constructor() {
     effect(() => {
-      const user = this.authState().user;
-      if (user) {
+      if (this.user()) {
         this.router.navigateByUrl(this.returnUrl);
       }
     });

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { NotFoundPageViewComponent } from './not-found-page-view.component';
 
 describe('NotFoundPageViewComponent', () => {
@@ -8,6 +9,7 @@ describe('NotFoundPageViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NotFoundPageViewComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NotFoundPageViewComponent);

@@ -3,7 +3,11 @@ import { ProductsFormViewComponent } from '../../presentational/products-form-vi
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateProductRequest } from '../../../types/products.types';
 import { Store } from '@ngrx/store';
-import { selectCategories, selectProducts } from '../../../state/products.reducers';
+import {
+  selectCategories,
+  selectProductsLoading,
+  selectSelectedProduct,
+} from '../../../state/products.reducers';
 import { CategoryActions, ProductActions } from '../../../state/products.actions';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ProductForm } from '../../../types/product-form.types';
@@ -26,10 +30,9 @@ export class ProductsFormComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly categoriesState = this.store.selectSignal(selectCategories);
-  private readonly productsState = this.store.selectSignal(selectProducts);
   readonly categoriesList = computed(() => this.categoriesState().list);
-  readonly productToEdit = computed(() => this.productsState().selectedProduct);
-  readonly isLoading = computed(() => this.productsState().isLoading);
+  readonly productToEdit = this.store.selectSignal(selectSelectedProduct);
+  readonly isLoading = this.store.selectSignal(selectProductsLoading);
   private readonly formBuilder = inject(FormBuilder);
 
   readonly productForm: ProductForm = this.formBuilder.nonNullable.group({

@@ -2,19 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectAuthState } from '../../../../auth/state/auth.reducers';
+import { selectUser } from '../../../../auth/state/auth.reducers';
 import { User } from '../../../../user/types/users.types';
 import { PageHeaderComponent } from './page-header.component';
 
 describe('PageHeaderComponent', () => {
   let component: PageHeaderComponent;
   let fixture: ComponentFixture<PageHeaderComponent>;
-  const authState = signal<{ user: User | null }>({ user: null });
+  const currentUser = signal<User | null>(null);
   let dispatch: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     dispatch = vi.fn();
-    authState.set({ user: null });
+    currentUser.set(null);
     await TestBed.configureTestingModule({
       imports: [PageHeaderComponent],
       providers: [
@@ -22,8 +22,7 @@ describe('PageHeaderComponent', () => {
           provide: Store,
           useValue: {
             dispatch,
-            selectSignal: (selector: unknown) =>
-              selector === selectAuthState ? authState : signal(null),
+            selectSignal: () => currentUser,
           },
         },
         provideRouter([]),
@@ -46,7 +45,7 @@ describe('PageHeaderComponent', () => {
       username: 'jane',
       role: 'CUSTOMER',
     };
-    authState.set({ user });
+    currentUser.set(user);
 
     expect(component.isLoggedIn()).toBe(true);
     expect(component.currentUser()).toEqual(user);

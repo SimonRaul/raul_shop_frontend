@@ -21,8 +21,8 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class LoginFormViewComponent {
   private readonly formBuilder = inject(FormBuilder);
-  submittedClicked = output<UserLoginRequest>();
-  errorMessage = input<string | null>(null);
+  readonly submittedClicked = output<UserLoginRequest>();
+  readonly errorMessage = input<string | null>(null);
 
   loginForm = this.formBuilder.group({
     username: ['', [Validators.required]],

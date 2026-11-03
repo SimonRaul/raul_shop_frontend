@@ -3,7 +3,7 @@ import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-deta
 import { Router } from '@angular/router';
 import { ShoppingCartService } from '../../../services/shopping-cart.service';
 import { Store } from '@ngrx/store';
-import { selectProducts } from '../../../../products/state/products.reducers';
+import { selectProductList } from '../../../../products/state/products.reducers';
 import { EnrichedCartItem } from '../../../types/cart-item.types';
 
 @Component({
@@ -26,10 +26,10 @@ export class ShoppingCartDetailsComponent {
   private readonly router = inject(Router);
   private readonly store = inject(Store);
   private readonly rawCartState = this.shoppingCartService.getCartState();
-  private readonly productsState = this.store.selectSignal(selectProducts);
+  private readonly productList = this.store.selectSignal(selectProductList);
 
   readonly enrichedCartItems = computed(() => {
-    const allProducts = this.productsState().list;
+    const allProducts = this.productList();
     const cartItems = this.rawCartState().items;
 
     return cartItems

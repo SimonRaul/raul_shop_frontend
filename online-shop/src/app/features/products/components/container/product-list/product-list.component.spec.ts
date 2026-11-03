@@ -1,12 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ProductListComponent } from './product-list.component';
 import { ProductActions } from '../../../state/products.actions';
-import { selectProducts } from '../../../state/products.reducers';
+import {
+  selectProductList,
+  selectProductsError,
+  selectProductsLoading,
+} from '../../../state/products.reducers';
 import { Product } from '../../../types/products.types';
 import { UserRole } from '../../../../user/types/users.types';
+import { selectUser } from '../../../../auth/state/auth.reducers';
 
 describe('ProductListComponent', () => {
   let component: ProductListComponent;
@@ -18,7 +23,7 @@ describe('ProductListComponent', () => {
     isLoading: boolean;
     error: string | null;
   }>({ list: [], isLoading: false, error: null });
-  const authState = signal<{ user: { role: string } | null }>({ user: null });
+  const authState = signal<{ role: string } | null>(null);
   const product: Product = {
     id: 'product-1',
     name: 'Book',
@@ -34,7 +39,7 @@ describe('ProductListComponent', () => {
     dispatch = vi.fn();
     navigate = vi.fn();
     productsState.set({ list: [], isLoading: false, error: null });
-    authState.set({ user: null });
+    authState.set(null);
 
     await TestBed.configureTestingModule({
       imports: [ProductListComponent],
@@ -43,8 +48,21 @@ describe('ProductListComponent', () => {
           provide: Store,
           useValue: {
             dispatch,
-            selectSignal: (selector: unknown) =>
-              selector === selectProducts ? productsState : authState,
+            selectSignal: (selector: unknown) => {
+              if (selector === selectProductList) {
+                return computed(() => productsState().list);
+              }
+              if (selector === selectProductsLoading) {
+                return computed(() => productsState().isLoading);
+              }
+              if (selector === selectProductsError) {
+                return computed(() => productsState().error);
+              }
+              if (selector === selectUser) {
+                return authState;
+              }
+              return computed(() => null);
+            },
           },
         },
         { provide: Router, useValue: { navigate } },
@@ -70,7 +88,7 @@ describe('ProductListComponent', () => {
     expect(component.error()).toBeNull();
     expect(component.isAdmin()).toBe(false);
 
-    authState.set({ user: { role: `ROLE_${UserRole.ADMIN}` } });
+    authState.set({ role: `ROLE_${UserRole.ADMIN}` });
     expect(component.isAdmin()).toBe(true);
   });
 

@@ -1,6 +1,6 @@
 import { Product } from '../types/products.types';
 import { Category } from '../types/product-category.types';
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { CategoryActions, ProductActions } from './products.actions';
 
 export interface ProductsState {
@@ -129,3 +129,17 @@ export const productsFeature = createFeature({
 });
 
 export const { name, reducer, selectProducts, selectCategories } = productsFeature;
+
+export const selectProductList = createSelector(selectProducts, (products) => products.list);
+
+export const selectSelectedProduct = createSelector(
+  selectProducts,
+  (products) => products.selectedProduct,
+);
+
+export const selectProductsLoading = createSelector(
+  selectProducts,
+  (products) => products.isLoading,
+);
+
+export const selectProductsError = createSelector(selectProducts, (products) => products.error);

@@ -1,12 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ProductDetailsComponent } from './product-details.component';
 import { ProductActions } from '../../../state/products.actions';
-import { selectProducts } from '../../../state/products.reducers';
+import {
+  selectProductsError,
+  selectProductsLoading,
+  selectSelectedProduct,
+} from '../../../state/products.reducers';
 import { Product } from '../../../types/products.types';
 import { ShoppingCartService } from '../../../../shopping-cart/services/shopping-cart.service';
+import { selectUser } from '../../../../auth/state/auth.reducers';
 
 describe('ProductDetailsComponent', () => {
   let component: ProductDetailsComponent;
@@ -24,7 +29,7 @@ describe('ProductDetailsComponent', () => {
     isLoading: false,
     error: null,
   });
-  const authState = signal<{ user: { role: string } | null }>({ user: null });
+  const authState = signal<{ role: string } | null>(null);
   const product: Product = {
     id: 'product-1',
     name: 'Book',
@@ -42,7 +47,7 @@ describe('ProductDetailsComponent', () => {
     navigate = vi.fn();
     addToCart = vi.fn();
     productsState.set({ selectedProduct: null, isLoading: false, error: null });
-    authState.set({ user: null });
+    authState.set(null);
 
     await TestBed.configureTestingModule({
       imports: [ProductDetailsComponent],
@@ -51,8 +56,21 @@ describe('ProductDetailsComponent', () => {
           provide: Store,
           useValue: {
             dispatch,
-            selectSignal: (selector: unknown) =>
-              selector === selectProducts ? productsState : authState,
+            selectSignal: (selector: unknown) => {
+              if (selector === selectSelectedProduct) {
+                return computed(() => productsState().selectedProduct);
+              }
+              if (selector === selectProductsLoading) {
+                return computed(() => productsState().isLoading);
+              }
+              if (selector === selectProductsError) {
+                return computed(() => productsState().error);
+              }
+              if (selector === selectUser) {
+                return authState;
+              }
+              return computed(() => null);
+            },
           },
         },
         {

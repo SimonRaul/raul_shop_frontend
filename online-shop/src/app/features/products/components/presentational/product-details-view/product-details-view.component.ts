@@ -13,11 +13,11 @@ import { ConfirmationDialogComponent } from '../../../../shared/components/prese
   templateUrl: './product-details-view.component.html',
 })
 export class ProductDetailsViewComponent {
-  productData = input.required<Product>();
-  addToCartClicked = output<Product>();
-  deleteProductClicked = output<string>();
-  updateProductClicked = output<string>();
-  isAdmin = input.required<boolean>();
+  readonly productData = input.required<Product>();
+  readonly addToCartClicked = output<Product>();
+  readonly deleteProductClicked = output<string>();
+  readonly updateProductClicked = output<string>();
+  readonly isAdmin = input.required<boolean>();
   private readonly dialog = inject(MatDialog);
 
   showDeleteConfirmation(): void {

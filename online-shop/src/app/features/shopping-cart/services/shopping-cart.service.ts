@@ -10,7 +10,7 @@ import { CartItem } from '../types/cart-item.types';
 export class ShoppingCartService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
-  cartState = signal<CartState>(initialCartState);
+  readonly cartState = signal<CartState>(initialCartState);
 
   constructor() {
     this.loadFromLocalStorage();

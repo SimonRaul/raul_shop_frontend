@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { of } from 'rxjs';
 import { Product } from '../../../types/products.types';
 import { ProductDetailsViewComponent } from './product-details-view.component';
 
@@ -19,6 +21,14 @@ describe('ProductDetailsViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProductDetailsViewComponent],
+      providers: [
+        {
+          provide: MatDialog,
+          useValue: {
+            open: vi.fn().mockReturnValue({ afterClosed: () => of(true) }),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProductDetailsViewComponent);

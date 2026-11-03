@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Category } from '../../../types/product-category.types';
 import { Product } from '../../../types/products.types';
 import { ProductsFormViewComponent } from './products-form-view.component';
@@ -29,6 +30,17 @@ describe('ProductsFormViewComponent', () => {
     fixture = TestBed.createComponent(ProductsFormViewComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('categories', categories);
+    fixture.componentRef.setInput(
+      'productForm',
+      new FormBuilder().nonNullable.group({
+        name: ['', [Validators.required]],
+        description: ['', [Validators.required]],
+        price: [0, [Validators.required, Validators.min(0.01)]],
+        weight: [0, [Validators.required, Validators.min(0.001)]],
+        categoryId: ['', [Validators.required]],
+        imageUrl: ['', [Validators.required]],
+      }),
+    );
     fixture.detectChanges();
     await fixture.whenStable();
   });
@@ -41,7 +53,7 @@ describe('ProductsFormViewComponent', () => {
     const submitted = vi.fn();
     component.formSubmitted.subscribe(submitted);
 
-    expect(component.productForm.invalid).toBe(true);
+    expect(component.productForm().invalid).toBe(true);
 
     component.onSubmit();
 
@@ -49,7 +61,7 @@ describe('ProductsFormViewComponent', () => {
   });
 
   it('rejects negative prices and weights', () => {
-    component.productForm.patchValue({
+    component.productForm().patchValue({
       name: 'Desk',
       description: 'A wooden desk',
       price: -1,
@@ -58,9 +70,9 @@ describe('ProductsFormViewComponent', () => {
       imageUrl: 'https://example.com/desk.jpg',
     });
 
-    expect(component.productForm.get('price')?.hasError('min')).toBe(true);
-    expect(component.productForm.get('weight')?.hasError('min')).toBe(true);
-    expect(component.productForm.invalid).toBe(true);
+    expect(component.productForm().get('price')?.hasError('min')).toBe(true);
+    expect(component.productForm().get('weight')?.hasError('min')).toBe(true);
+    expect(component.productForm().invalid).toBe(true);
   });
 
   it('emits the form value when submitting a valid form', () => {
@@ -75,7 +87,7 @@ describe('ProductsFormViewComponent', () => {
       imageUrl: 'https://example.com/desk.jpg',
     };
 
-    component.productForm.setValue(formValue);
+    component.productForm().setValue(formValue);
     component.onSubmit();
 
     expect(submitted).toHaveBeenCalledOnce();
@@ -87,7 +99,7 @@ describe('ProductsFormViewComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(component.productForm.getRawValue()).toEqual({
+    expect(component.productForm().getRawValue()).toEqual({
       name: product.name,
       description: product.description,
       price: product.price,
@@ -102,7 +114,7 @@ describe('ProductsFormViewComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(component.productForm.get('categoryId')?.value).toBe('');
+    expect(component.productForm().get('categoryId')?.value).toBe('');
   });
 
   it('keeps the category empty when editing without categories', async () => {
@@ -111,7 +123,7 @@ describe('ProductsFormViewComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(component.productForm.get('categoryId')?.value).toBe('');
+    expect(component.productForm().get('categoryId')?.value).toBe('');
   });
 
   it('emits when cancel is clicked', () => {

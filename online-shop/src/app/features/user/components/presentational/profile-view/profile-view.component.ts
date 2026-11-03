@@ -13,6 +13,6 @@ import { MatError } from '@angular/material/input';
   templateUrl: './profile-view.component.html',
 })
 export class ProfileViewComponent {
-  currentUser = input.required<User | null>();
-  isLoading = input<boolean>(false);
+  readonly currentUser = input.required<User | null>();
+  readonly isLoading = input<boolean>(false);
 }

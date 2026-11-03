@@ -1,18 +1,23 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { filter, map, take } from 'rxjs';
+import { combineLatest, filter, map, take } from 'rxjs';
 import { AuthActions } from '../../features/auth/state/auth.actions';
-import { selectAuthState } from '../../features/auth/state/auth.reducers';
+import {
+  selectIsInitialized,
+  selectIsLoading,
+  selectUser,
+} from '../../features/auth/state/auth.reducers';
 import { AuthService } from '../../features/auth/services/auth.service';
 
 export const guestGuard: CanActivateFn = () => {
   const store = inject(Store);
   const router = inject(Router);
   const authService = inject(AuthService);
-  const auth = store.selectSignal(selectAuthState)();
+  const user = store.selectSignal(selectUser)();
+  const isLoading = store.selectSignal(selectIsLoading)();
 
-  if (auth.user) {
+  if (user) {
     return router.createUrlTree(['/products']);
   }
 
@@ -20,13 +25,17 @@ export const guestGuard: CanActivateFn = () => {
     return true;
   }
 
-  if (!auth.isLoading) {
+  if (!isLoading) {
     store.dispatch(AuthActions.validateSession());
   }
 
-  return store.select(selectAuthState).pipe(
-    filter((state) => state.isInitialized && !state.isLoading),
+  return combineLatest([
+    store.select(selectUser),
+    store.select(selectIsLoading),
+    store.select(selectIsInitialized),
+  ]).pipe(
+    filter(([, loading, initialized]) => initialized && !loading),
     take(1),
-    map((state) => (state.user ? router.createUrlTree(['/products']) : true)),
+    map(([validatedUser]) => (validatedUser ? router.createUrlTree(['/products']) : true)),
   );
 };

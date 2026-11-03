@@ -1,17 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectAuthState } from '../../../../auth/state/auth.reducers';
+import { selectIsLoading, selectUser } from '../../../../auth/state/auth.reducers';
 import { User } from '../../../types/users.types';
 import { ProfileComponent } from './profile.component';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
-  const authState = signal<{ user: User | null; isLoading: boolean }>({
-    user: null,
-    isLoading: false,
-  });
+  const currentUser = signal<User | null>(null);
+  const isLoading = signal(false);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -21,7 +19,7 @@ describe('ProfileComponent', () => {
           provide: Store,
           useValue: {
             selectSignal: (selector: unknown) =>
-              selector === selectAuthState ? authState : signal(null),
+              selector === selectUser ? currentUser : isLoading,
           },
         },
       ],
@@ -40,7 +38,8 @@ describe('ProfileComponent', () => {
       username: 'jane',
       role: 'CUSTOMER',
     };
-    authState.set({ user, isLoading: true });
+    currentUser.set(user);
+    isLoading.set(true);
 
     expect(component.currentUser()).toEqual(user);
     expect(component.isLoading()).toBe(true);

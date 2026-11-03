@@ -1,9 +1,13 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../../features/auth/services/auth.service';
-import { filter, map, take } from 'rxjs';
+import { combineLatest, filter, map, take } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectAuthState } from '../../features/auth/state/auth.reducers';
+import {
+  selectIsInitialized,
+  selectIsLoading,
+  selectUser,
+} from '../../features/auth/state/auth.reducers';
 import { AuthActions } from '../../features/auth/state/auth.actions';
 
 export const authGuard: CanActivateFn = (route, state) => {
@@ -11,9 +15,10 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  const authState = store.selectSignal(selectAuthState)();
+  const user = store.selectSignal(selectUser)();
+  const isLoading = store.selectSignal(selectIsLoading)();
 
-  if (authState.user) {
+  if (user) {
     return true;
   }
 
@@ -26,13 +31,17 @@ export const authGuard: CanActivateFn = (route, state) => {
     return loginRedirect;
   }
 
-  if (!authState.isLoading) {
+  if (!isLoading) {
     store.dispatch(AuthActions.validateSession());
   }
 
-  return store.select(selectAuthState).pipe(
-    filter((auth) => auth.isInitialized && !auth.isLoading),
+  return combineLatest([
+    store.select(selectUser),
+    store.select(selectIsLoading),
+    store.select(selectIsInitialized),
+  ]).pipe(
+    filter(([, loading, initialized]) => initialized && !loading),
     take(1),
-    map((auth) => (auth.user ? true : loginRedirect)),
+    map(([validatedUser]) => (validatedUser ? true : loginRedirect)),
   );
 };

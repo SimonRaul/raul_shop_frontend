@@ -4,8 +4,12 @@ import { Router } from '@angular/router';
 import { hasUserRole, UserRole } from '../../../../user/types/users.types';
 import { Store } from '@ngrx/store';
 import { ProductActions } from '../../../state/products.actions';
-import { selectProducts } from '../../../state/products.reducers';
-import { selectAuthState } from '../../../../auth/state/auth.reducers';
+import {
+  selectProductList,
+  selectProductsError,
+  selectProductsLoading,
+} from '../../../state/products.reducers';
+import { selectUser } from '../../../../auth/state/auth.reducers';
 
 @Component({
   imports: [ProductListViewComponent],
@@ -25,12 +29,11 @@ import { selectAuthState } from '../../../../auth/state/auth.reducers';
 export class ProductListComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly store = inject(Store);
-  private readonly productsState = this.store.selectSignal(selectProducts);
-  private readonly authState = this.store.selectSignal(selectAuthState);
-  readonly productList = computed(() => this.productsState().list);
-  readonly isLoading = computed(() => this.productsState().isLoading);
-  readonly error = computed(() => this.productsState().error);
-  readonly isAdmin = computed(() => hasUserRole(this.authState().user, UserRole.ADMIN));
+  private readonly currentUser = this.store.selectSignal(selectUser);
+  readonly productList = this.store.selectSignal(selectProductList);
+  readonly isLoading = this.store.selectSignal(selectProductsLoading);
+  readonly error = this.store.selectSignal(selectProductsError);
+  readonly isAdmin = computed(() => hasUserRole(this.currentUser(), UserRole.ADMIN));
 
   ngOnInit(): void {
     this.loadProducts();

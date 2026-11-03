@@ -1,10 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ProductsFormComponent } from './products-form.component';
 import { CategoryActions, ProductActions } from '../../../state/products.actions';
-import { selectCategories } from '../../../state/products.reducers';
+import {
+  selectCategories,
+  selectProductsLoading,
+  selectSelectedProduct,
+} from '../../../state/products.reducers';
 import { CreateProductRequest, Product } from '../../../types/products.types';
 
 describe('ProductsFormComponent', () => {
@@ -56,8 +60,18 @@ describe('ProductsFormComponent', () => {
           provide: Store,
           useValue: {
             dispatch,
-            selectSignal: (selector: unknown) =>
-              selector === selectCategories ? categoriesState : productsState,
+            selectSignal: (selector: unknown) => {
+              if (selector === selectCategories) {
+                return categoriesState;
+              }
+              if (selector === selectSelectedProduct) {
+                return computed(() => productsState().selectedProduct);
+              }
+              if (selector === selectProductsLoading) {
+                return computed(() => false);
+              }
+              return computed(() => false);
+            },
           },
         },
         {

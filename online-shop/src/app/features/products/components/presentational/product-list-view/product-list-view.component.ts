@@ -11,12 +11,12 @@ import { MatTableModule } from '@angular/material/table';
   templateUrl: './product-list-view.component.html',
 })
 export class ProductListViewComponent {
-  products = input.required<Product[]>();
-  isLoading = input.required<boolean>();
-  error = input.required<string | null>();
-  isAdmin = input.required<boolean>();
-  productClicked = output<string>();
-  addProductClicked = output<void>();
-  retryClicked = output<void>();
-  displayedColumns: string[] = ['image', 'name', 'price', 'actions'];
+  readonly products = input.required<Product[]>();
+  readonly isLoading = input.required<boolean>();
+  readonly error = input.required<string | null>();
+  readonly isAdmin = input.required<boolean>();
+  readonly productClicked = output<string>();
+  readonly addProductClicked = output<void>();
+  readonly retryClicked = output<void>();
+  readonly displayedColumns: string[] = ['image', 'name', 'price', 'actions'];
 }

@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './page-header-view.component.html',
 })
 export class PageHeaderViewComponent {
-  isLoggedIn = input.required<boolean>();
-  currentUser = input<User | null>(null);
-  logoutClicked = output<void>();
+  readonly isLoggedIn = input.required<boolean>();
+  readonly currentUser = input<User | null>(null);
+  readonly logoutClicked = output<void>();
 }

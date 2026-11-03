@@ -13,11 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './shopping-cart-details-view.html',
 })
 export class ShoppingCartDetailsView {
-  totalPrice = input.required<number>();
-  totalItems = input.required<number>();
-  items = input.required<EnrichedCartItem[]>();
+  readonly totalPrice = input.required<number>();
+  readonly totalItems = input.required<number>();
+  readonly items = input.required<EnrichedCartItem[]>();
 
-  quantityChanged = output<{ productId: string; rawValue: string }>();
-  itemRemoved = output<string>();
-  checkoutClicked = output<void>();
+  readonly quantityChanged = output<{ productId: string; rawValue: string }>();
+  readonly itemRemoved = output<string>();
+  readonly checkoutClicked = output<void>();
 }

@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ProfileViewComponent } from '../../presentational/profile-view/profile-view.component';
 import { Store } from '@ngrx/store';
-import { selectAuthState } from '../../../../auth/state/auth.reducers';
+import { selectIsLoading, selectUser } from '../../../../auth/state/auth.reducers';
 
 @Component({
   imports: [ProfileViewComponent],
@@ -14,7 +14,6 @@ import { selectAuthState } from '../../../../auth/state/auth.reducers';
 })
 export class ProfileComponent {
   private readonly store = inject(Store);
-  private readonly authState = this.store.selectSignal(selectAuthState);
-  currentUser = computed(() => this.authState().user);
-  isLoading = computed(() => this.authState().isLoading);
+  readonly currentUser = this.store.selectSignal(selectUser);
+  readonly isLoading = this.store.selectSignal(selectIsLoading);
 }

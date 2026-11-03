@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CheckoutPageViewComponent } from '../../presentational/checkout-page-view/checkout-page-view.component';
 import { Address } from '../../../types/address.types';
 import { Checkout } from '../../../types/checkout.types';
-import { selectAuthState } from '../../../../auth/state/auth.reducers';
+import { selectUser } from '../../../../auth/state/auth.reducers';
 import { Store } from '@ngrx/store';
 import { ShoppingCartService } from '../../../../shopping-cart/services/shopping-cart.service';
 import { Router } from '@angular/router';
@@ -21,14 +21,13 @@ import { Router } from '@angular/router';
 })
 export class CheckoutPageComponent {
   private readonly store = inject(Store);
-  private readonly authState = this.store.selectSignal(selectAuthState);
+  readonly currentUser = this.store.selectSignal(selectUser);
   private readonly shoppingCartService = inject(ShoppingCartService);
-  cartState = this.shoppingCartService.getCartState();
-  currentUser = computed(() => this.authState().user);
+  readonly cartState = this.shoppingCartService.getCartState();
   private readonly router = inject(Router);
-  isCheckedOut = signal<boolean>(false);
-  isLoading = signal<boolean>(false);
-  errorMessage = signal<string | null>(null);
+  readonly isCheckedOut = signal<boolean>(false);
+  readonly isLoading = signal<boolean>(false);
+  readonly errorMessage = signal<string | null>(null);
 
   onCheckout(address: Address) {
     this.isLoading.set(true);

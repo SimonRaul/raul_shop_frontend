@@ -27,9 +27,9 @@ import { ProductForm } from '../../../types/product-form.types';
 })
 export class ProductsFormViewComponent {
   readonly categories = input.required<Category[]>();
-  formSubmitted = output<CreateProductRequest>();
+  readonly formSubmitted = output<CreateProductRequest>();
   readonly initialData = input<Product | null>(null);
-  cancelClicked = output<void>();
+  readonly cancelClicked = output<void>();
   readonly isLoading = input<boolean>(false);
   readonly productForm = input.required<ProductForm>();
 
